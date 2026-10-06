@@ -272,17 +272,89 @@
     </div>
 
 
-    <!-- MODAL: TIMELINE Y FICHA COMPLETA -->
+    <!-- MODAL: EDITAR CLIENTE EXISTENTE -->
+    <div id="modal-editar-cliente" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl bg-slate-900/95">
+            <button onclick="closeModal('modal-editar-cliente')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
+                <i class="fas fa-xmark"></i>
+            </button>
+            
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-3">
+                <i class="fas fa-pen-to-square text-amber-400"></i> Modificar Datos del Cliente
+            </h3>
+
+            <form onsubmit="saveEditedClient(event)" class="space-y-3">
+                <input type="hidden" id="edit-dni">
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DNI (Identificador Único)</label>
+                    <input type="text" id="edit-dni-disabled" disabled class="w-full bg-slate-950/30 border border-slate-800/80 rounded-xl py-2 px-3 text-xs text-slate-500 font-mono cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nombre y Apellido</label>
+                    <input type="text" id="edit-nombre" required class="w-full bg-slate-950/60 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vehículo / Modelo</label>
+                        <input type="text" id="edit-vehiculo" required class="w-full bg-slate-950/60 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">WhatsApp</label>
+                        <input type="text" id="edit-wsp" required class="w-full bg-slate-950/60 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-editar-cliente')" class="w-1/3 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-all">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-2/3 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
+                        Actualizar Datos
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: TIMELINE Y FICHA COMPLETA CON ACCIONES (LÁPIZ Y BASURITA) -->
     <div id="modal-timeline" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
         <div class="glass-card w-full max-w-lg rounded-3xl p-5 relative border border-slate-700 shadow-2xl flex flex-col max-h-[90vh] bg-slate-900/90">
+            
             <button onclick="closeModal('modal-timeline')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
                 <i class="fas fa-xmark"></i>
             </button>
             
-            <div class="mb-4 pb-3 border-b border-slate-800">
-                <span class="text-[9px] font-black uppercase tracking-widest text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-2 py-0.5 rounded-full">Historial de Servicios</span>
-                <h3 id="timeline-client-name" class="text-lg font-black text-white mt-1">Nombre Cliente</h3>
-                <p id="timeline-client-info" class="text-xs text-slate-400 mt-0.5">DNI: - | Vehículo: -</p>
+            <div class="mb-4 pb-3 border-b border-slate-800 flex items-start justify-between pr-8">
+                <div>
+                    <span class="text-[9px] font-black uppercase tracking-widest text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-2 py-0.5 rounded-full">Historial & Ficha</span>
+                    <h3 id="timeline-client-name" class="text-lg font-black text-white mt-1">Nombre Cliente</h3>
+                    <p id="timeline-client-info" class="text-xs text-slate-400 mt-0.5">DNI: - | Vehículo: -</p>
+                </div>
+
+                <!-- BOTONES DE EDICIÓN Y ELIMINACIÓN -->
+                <div class="flex items-center gap-1.5 shrink-0 pt-1">
+                    <button 
+                        id="btn-edit-client" 
+                        onclick="" 
+                        class="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-slate-950 flex items-center justify-center transition-all cursor-pointer shadow-sm"
+                        title="Editar datos del cliente"
+                    >
+                        <i class="fas fa-pen text-xs"></i>
+                    </button>
+
+                    <button 
+                        id="btn-delete-client" 
+                        onclick="" 
+                        class="w-8 h-8 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
+                        title="Eliminar cliente por completo"
+                    >
+                        <i class="fas fa-trash-can text-xs"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="flex-1 overflow-y-auto pr-2 space-y-4" id="timeline-list">
@@ -628,6 +700,7 @@
             });
         }
 
+        // APERTURA DEL HISTORIAL CON BOTONES DE ACCIÓN (EDITAR Y ELIMINAR)
         function openTimeline(dni) {
             const clientes = getClientsData();
             const turnos = getTurnosData();
@@ -637,6 +710,10 @@
 
             document.getElementById('timeline-client-name').textContent = cliente.nombre;
             document.getElementById('timeline-client-info').textContent = `DNI: ${cliente.dni} | WSP: ${cliente.wsp || 'Sin registrar'} | Vehículo habitual: ${cliente.vehiculo}`;
+
+            // Asignar funciones a los botones de la cabecera del historial
+            document.getElementById('btn-edit-client').onclick = () => openEditClientModal(dni);
+            document.getElementById('btn-delete-client').onclick = () => deleteClient(dni);
 
             const clientTurnos = turnos.filter(t => t.dni === dni);
             clientTurnos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
@@ -676,6 +753,67 @@
             }
 
             openModal('modal-timeline');
+        }
+
+        /* --- LÓGICA DE EDICIÓN Y ELIMINACIÓN DE CLIENTES --- */
+
+        function openEditClientModal(dni) {
+            const clientes = getClientsData();
+            const cliente = clientes.find(c => c.dni === dni);
+            if (!cliente) return;
+
+            document.getElementById('edit-dni').value = cliente.dni;
+            document.getElementById('edit-dni-disabled').value = cliente.dni;
+            document.getElementById('edit-nombre').value = cliente.nombre || '';
+            document.getElementById('edit-vehiculo').value = cliente.vehiculo || '';
+            document.getElementById('edit-wsp').value = cliente.wsp || '';
+
+            openModal('modal-editar-cliente');
+        }
+
+        function saveEditedClient(event) {
+            event.preventDefault();
+
+            const dni = document.getElementById('edit-dni').value;
+            const nuevoNombre = document.getElementById('edit-nombre').value.trim();
+            const nuevoVehiculo = document.getElementById('edit-vehiculo').value.trim();
+            const nuevoWsp = document.getElementById('edit-wsp').value.trim();
+
+            let clientes = getClientsData();
+            const index = clientes.findIndex(c => c.dni === dni);
+
+            if (index !== -1) {
+                clientes[index].nombre = nuevoNombre;
+                clientes[index].vehiculo = nuevoVehiculo;
+                clientes[index].wsp = nuevoWsp;
+
+                localStorage.setItem('wc_clientes', JSON.stringify(clientes));
+
+                closeModal('modal-editar-cliente');
+                
+                // Si el modal de timeline está abierto, actualizamos su cabecera inmediatamente
+                const timelineModal = document.getElementById('modal-timeline');
+                if (!timelineModal.classList.contains('hidden')) {
+                    document.getElementById('timeline-client-name').textContent = nuevoNombre;
+                    document.getElementById('timeline-client-info').textContent = `DNI: ${dni} | WSP: ${nuevoWsp || 'Sin registrar'} | Vehículo habitual: ${nuevoVehiculo}`;
+                }
+
+                loadClientModule();
+            }
+        }
+
+        function deleteClient(dni) {
+            const clientes = getClientsData();
+            const cliente = clientes.find(c => c.dni === dni);
+            if (!cliente) return;
+
+            if (confirm(`¿Estás seguro de borrar a "${cliente.nombre}" del registro?\n\nEsta acción eliminará al cliente del sistema.`)) {
+                let nuevosClientes = clientes.filter(c => c.dni !== dni);
+                localStorage.setItem('wc_clientes', JSON.stringify(nuevosClientes));
+
+                closeModal('modal-timeline');
+                loadClientModule();
+            }
         }
 
         /* --- MÓDULO DE WHATSAPP Y PLANTILLAS PERSONALIZADAS --- */
