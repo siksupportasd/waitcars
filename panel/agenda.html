@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950">
+<html lang="es" class="h-full select-none">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waitcars - Acceso al Sistema</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Waitcars - Agenda y Control de Cobros</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <script>
@@ -20,7 +20,7 @@
                             dark: '#0b3b82',
                             primary: '#1d8ef1',
                             accent: '#00c6ff',
-                            slate: '#07162c'
+                            slate: '#0f172a'
                         }
                     },
                     fontFamily: {
@@ -32,477 +32,323 @@
     </script>
 
     <style>
-        body {
+        html, body {
+            touch-action: manipulation;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #020712;
+            background-color: #0b1329;
+            color: #f8fafc;
         }
 
-        /* FONDO LIGERO ANIMADO EN CSS (Replaza al canvas pesado) */
-        .bg-grid-pattern {
-            background-image: radial-gradient(rgba(29, 142, 241, 0.12) 1px, transparent 1px);
-            background-size: 24px 24px;
+        input, select, textarea, button {
+            font-size: 16px !important;
         }
 
-        /* Ambient Glows Optimizados */
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            opacity: 0.25;
-            will-change: transform;
+        .dashboard-bg {
+            background-color: #0b1329;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(29, 142, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 198, 255, 0.08) 0px, transparent 50%),
+                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 24px 24px;
         }
 
-        /* Glass Container Optimizado sin lag */
-        .enterprise-card {
-            background: rgba(7, 22, 44, 0.85);
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-blur {
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(11, 59, 130, 0.2);
         }
 
-        /* Línea Divisora Neón */
-        .divider-glow {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(29, 142, 241, 0.6), rgba(0, 198, 255, 0.8), rgba(29, 142, 241, 0.6), transparent);
-            box-shadow: 0 0 10px rgba(29, 142, 241, 0.4);
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-
-        /* --- ANIMACIÓN FLECHA --- */
-        .back-arrow-icon {
-            animation: arrow-bounce-left 2s ease-in-out infinite;
+        ::-webkit-scrollbar-track {
+            background: rgba(11, 19, 41, 0.6);
         }
-
-        @keyframes arrow-bounce-left {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(-4px); }
-        }
-
-        /* --- ANIMACIONES LOGO WAITCARS --- */
-        .logo-text-container {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 3px solid #1d8ef1;
-            animation: typing 1s steps(10, end), blink-caret 0.5s step-end infinite alternate, remove-border 0.1s 1.2s forwards;
-        }
-
-        .logo-text-container span.text-[#1d8ef1] {
-            animation: text-pulse-glow 3s ease-in-out infinite 1.3s alternate;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #1d8ef1; }
-        }
-
-        @keyframes remove-border {
-            to { border-right: none; }
-        }
-
-        @keyframes text-pulse-glow {
-            0% {
-                text-shadow: 0 0 5px rgba(29, 142, 241, 0.4);
-                color: #1d8ef1;
-            }
-            100% {
-                text-shadow: 0 0 18px rgba(0, 198, 255, 0.9), 0 0 30px rgba(29, 142, 241, 0.6);
-                color: #38bdf8;
-            }
-        }
-
-        /* --- ANIMACIÓN BOTÓN INGRESAR --- */
-        .btn-shimmer {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-shimmer::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -150%;
-            width: 100%;
-            height: 200%;
-            background: linear-gradient(
-                60deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.35) 50%,
-                transparent 70%
-            );
-            transform: rotate(25deg);
-            animation: btn-sweep 3.5s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        @keyframes btn-sweep {
-            0% { left: -150%; }
-            35%, 100% { left: 150%; }
-        }
-
-        /* --- ANIMACIONES REDES SOCIALES --- */
-        .ig-animated-icon {
-            animation: float-ig 3s ease-in-out infinite, pulse-ig-glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes float-ig {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-3px) rotate(4deg); }
-        }
-
-        @keyframes pulse-ig-glow {
-            0% { filter: drop-shadow(0 0 2px rgba(236, 72, 153, 0.3)); }
-            100% { filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.8)); }
-        }
-
-        .wsp-radar-ring {
-            position: absolute;
-            inset: -4px;
-            border-radius: 12px;
-            border: 1.5px solid rgba(16, 185, 129, 0.6);
-            animation: radar-expand 2s infinite cubic-bezier(0, 0.2, 0.8, 1);
-            pointer-events: none;
-        }
-
-        @keyframes radar-expand {
-            0% { transform: scale(0.85); opacity: 0.9; }
-            100% { transform: scale(1.35); opacity: 0; }
-        }
-
-        .wsp-animated-icon {
-            animation: pulse-wsp 1.8s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse-wsp {
-            0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.4)); }
-            100% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.9)); }
-        }
-
-        /* Focus Icon Styling */
-        .input-group:focus-within .input-icon-bg {
-            background-color: rgba(29, 142, 241, 0.15);
-            border-color: rgba(29, 142, 241, 0.5);
-            color: #1d8ef1;
-            box-shadow: 0 0 12px rgba(29, 142, 241, 0.3);
-        }
-
-        /* ANIMACIÓN ALERTAS */
-        @keyframes alert-pop {
-            0% { opacity: 0; transform: translateY(-6px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .alert-animated {
-            animation: alert-pop 0.25s ease-out forwards;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(29, 142, 241, 0.35);
+            border-radius: 10px;
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#020712] text-slate-100 antialiased selection:bg-brand-primary selection:text-white relative overflow-x-hidden flex items-center justify-center p-4 sm:p-6 bg-grid-pattern">
+<body class="min-h-screen dashboard-bg text-slate-100 p-3 sm:p-6 relative">
 
-    <!-- Destellos Lumínicos de Fondo (Ligeros) -->
-    <div class="glow-orb w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] bg-brand-primary -top-20 -left-20 z-0"></div>
-    <div class="glow-orb w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-brand-dark bottom-0 right-0 z-0"></div>
-
-    <!-- BOTÓN VOLVER AL INICIO -->
-    <a 
-        href="../index.html" 
-        class="fixed top-6 left-6 z-30 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800/90 text-slate-300 hover:text-white hover:border-brand-primary/50 hover:bg-slate-800/90 text-xs font-semibold transition-all duration-200 shadow-xl group"
-    >
-        <i class="fas fa-arrow-left text-xs text-brand-primary back-arrow-icon"></i>
-        <span>Volver al inicio</span>
-    </a>
-
-    <!-- CONTAINER CENTRADO -->
-    <div class="relative z-10 w-full max-w-md my-auto pt-10 sm:pt-0">
+    <!-- CABECERA PRINCIPAL -->
+    <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-6 pt-2">
+        <span class="px-3 py-1 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-widest shadow-sm shadow-brand-primary/20 mb-2.5 flex items-center gap-1.5">
+            <i class="fas fa-calendar-days text-xs"></i> Control de Operaciones
+        </span>
         
-        <!-- CARD UNIFICADA -->
-        <div class="enterprise-card rounded-3xl overflow-hidden shadow-2xl transition-all duration-200">
+        <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center justify-center gap-3">
+            <i class="fas fa-clock text-brand-primary"></i> Agenda de Turnos y Cobros
+        </h2>
+        
+        <p class="text-xs sm:text-sm text-slate-400 mt-1.5 font-medium max-w-lg leading-relaxed">
+            Visualiza los turnos ordenados por horario, registra el estado de pago de los servicios y administra tus medios de cobro.
+        </p>
+
+        <!-- NAVEGADOR DE FECHA Y BOTÓN NUEVO MÉTODO -->
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+            <input 
+                type="date" 
+                id="agenda-date-picker" 
+                onchange="loadAgendaTurnos()" 
+                class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-brand-primary cursor-pointer shadow-md"
+            >
+            <button 
+                onclick="openModal('modal-nuevo-metodo')" 
+                class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition-all flex items-center gap-2 shadow-md cursor-pointer"
+            >
+                <i class="fas fa-wallet text-brand-accent"></i> Gestionar Pagos
+            </button>
+        </div>
+    </div>
+
+    <!-- LISTADO DE TURNOS DEL DÍA -->
+    <div class="max-w-4xl mx-auto space-y-3.5 relative z-10" id="agenda-turnos-container">
+        <!-- Generado dinámicamente -->
+    </div>
+
+
+    <!-- MODAL: GESTIONAR MÉTODOS DE PAGO -->
+    <div id="modal-nuevo-metodo" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl bg-slate-900/90">
+            <button onclick="closeModal('modal-nuevo-metodo')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
+                <i class="fas fa-xmark"></i>
+            </button>
             
-            <!-- SECCIÓN SUPERIOR: BRANDING Y PRESENTACIÓN -->
-            <div class="p-8 pb-6 bg-gradient-to-b from-[#0b2346]/60 via-[#07162c]/40 to-transparent text-center relative overflow-hidden">
-                
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 bg-brand-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-2">
+                <i class="fas fa-wallet text-brand-accent"></i> Medios de Cobro
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Agrega nuevos métodos de pago personalizados para registrar en los turnos.</p>
 
-                <!-- LOGOTIPO CON TIPOGRAFÍA Y ANIMACIÓN PERMANENTE -->
-                <div class="h-14 flex items-center justify-center mb-1">
-                    <div class="logo-text-container text-4xl sm:text-5xl font-extrabold tracking-tight select-none py-1">
-                        <span class="text-white font-black drop-shadow-md">Wait</span><span class="text-[#1d8ef1] font-black ml-0.5 drop-shadow-md">cars</span>
-                    </div>
+            <div class="space-y-3">
+                <div class="flex gap-2">
+                    <input type="text" id="input-nuevo-metodo" placeholder="Ej: Tarjeta de Crédito, Mercado Pago..." class="w-full bg-slate-950/60 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    <button onclick="addNewPaymentMethod()" class="px-4 py-2 bg-brand-primary text-white rounded-xl text-xs font-bold hover:bg-brand-primary/90 transition-all shadow-md shrink-0">
+                        Agregar
+                    </button>
                 </div>
 
-                <p class="text-xs sm:text-sm font-medium leading-relaxed max-w-xs mx-auto text-slate-300">
-                    Inicia sesión con tus credenciales asignadas para administrar y escalar tu negocio.
-                </p>
-            </div>
-
-            <!-- LÍNEA DIVISORA DEGRADADA -->
-            <div class="relative my-1 px-8">
-                <div class="divider-glow w-full"></div>
-            </div>
-
-            <!-- SECCIÓN INFERIOR: FORMULARIO, REDES Y SOPORTE -->
-            <div class="p-8 pt-6 bg-slate-950/80">
-                
-                <!-- CAJA DE ALERTAS PROFESIONAL -->
-                <div id="alert-box" class="hidden mb-6 p-4 rounded-2xl text-xs font-semibold transition-all duration-200 alert-animated">
-                    <div class="flex items-center gap-3.5">
-                        <div id="alert-icon-container" class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border shadow-inner">
-                            <i id="alert-icon" class="text-sm"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p id="alert-title" class="text-[10px] uppercase tracking-wider font-extrabold opacity-80 mb-0.5"></p>
-                            <p id="alert-message" class="text-xs font-bold leading-tight tracking-wide"></p>
-                        </div>
+                <div class="pt-2">
+                    <span class="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-2">Métodos Disponibles</span>
+                    <div id="payment-methods-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                        <!-- Generado dinámicamente -->
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- FORMULARIO DE ACCESO -->
-                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
-                    
-                    <!-- CAMPO USUARIO -->
-                    <div class="input-group">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                            Usuario del Sistema
-                        </label>
-                        <div class="relative flex items-center">
-                            <div class="input-icon-bg absolute left-2.5 z-10 w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 transition-all duration-200 pointer-events-none">
-                                <i class="fas fa-shield-halved text-xs"></i>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // MÉTODOS DE PAGO PREDETERMINADOS DE FÁBRICA
+        const DEFAULT_PAYMENT_METHODS = [
+            { id: 'efectivo', name: 'Efectivo', isDefault: true },
+            { id: 'transferencia', name: 'Transferencia', isDefault: true }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sessionData = localStorage.getItem('waitcars_session');
+            if (!sessionData) {
+                window.location.href = 'auth/login.html';
+                return;
+            }
+
+            // Establecer fecha actual por defecto en el selector
+            const todayStr = new Date().toISOString().split('T')[0];
+            const datePicker = document.getElementById('agenda-date-picker');
+            datePicker.value = todayStr;
+
+            loadAgendaTurnos();
+        });
+
+        function getTurnosData() {
+            return JSON.parse(localStorage.getItem('wc_turnos') || '[]');
+        }
+
+        function saveTurnosData(turnos) {
+            localStorage.setItem('wc_turnos', JSON.stringify(turnos));
+        }
+
+        function getPaymentMethods() {
+            const custom = JSON.parse(localStorage.getItem('wc_payment_methods') || '[]');
+            return [...DEFAULT_PAYMENT_METHODS, ...custom];
+        }
+
+        function loadAgendaTurnos() {
+            const selectedDate = document.getElementById('agenda-date-picker').value;
+            const turnos = getTurnosData();
+            const container = document.getElementById('agenda-turnos-container');
+            container.innerHTML = '';
+
+            // Filtrar turnos de la fecha seleccionada
+            const dayTurnos = turnos.filter(t => t.fecha === selectedDate);
+
+            // Ordenar por hora (ej. "10:30")
+            dayTurnos.sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
+
+            if (dayTurnos.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 glass-card rounded-2xl border border-slate-800">
+                        <i class="fas fa-calendar-xmark text-4xl text-slate-600 mb-3"></i>
+                        <p class="text-xs text-slate-400 font-medium">No hay turnos agendados para esta fecha.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const paymentMethods = getPaymentMethods();
+
+            dayTurnos.forEach(turno => {
+                const isPaid = turno.pagado || false;
+                const currentMethod = turno.metodoPago || 'efectivo';
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${isPaid ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800'}`;
+
+                // Opciones del selector de pago
+                let paymentOptionsHtml = '';
+                paymentMethods.forEach(pm => {
+                    const selected = currentMethod === pm.id ? 'selected' : '';
+                    paymentOptionsHtml += `<option value="${pm.id}" ${selected}>${pm.name}</option>`;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3 w-full sm:w-auto">
+                        <div class="w-12 h-12 rounded-2xl bg-brand-primary/15 border border-brand-primary/30 text-brand-primary font-black text-xs flex flex-col items-center justify-center shrink-0 shadow-inner">
+                            <span>${turno.hora || 'S/H'}</span>
+                            <span class="text-[9px] text-slate-400 font-normal">hs</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-black text-white">${turno.cliente || 'Cliente sin nombre'}</h3>
+                                ${isPaid ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pagado</span>' : '<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500/20 text-amber-400 border border-amber-500/30">Pendiente de Pago</span>'}
                             </div>
-                            <input 
-                                type="text" 
-                                id="usuario" 
-                                required
-                                autocomplete="username"
-                                placeholder="Nombre de usuario" 
-                                class="w-full bg-slate-900/90 border border-slate-800/90 rounded-xl py-3.5 pl-14 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all duration-200 font-medium shadow-inner"
-                            >
+                            <p class="text-xs text-slate-300 mt-0.5 font-medium"><i class="fas fa-car text-[10px] text-brand-accent mr-1"></i> ${turno.vehiculo || 'Vehículo general'}</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5 font-mono">DNI: ${turno.dni || 'N/A'} | Monto: <span class="text-emerald-400 font-bold">$${(turno.monto || 0).toFixed(2)}</span></p>
                         </div>
                     </div>
 
-                    <!-- CAMPO CONTRASEÑA -->
-                    <div class="input-group">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                            Contraseña de Acceso
-                        </label>
-                        <div class="relative flex items-center">
-                            <div class="input-icon-bg absolute left-2.5 z-10 w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 transition-all duration-200 pointer-events-none">
-                                <i class="fas fa-lock text-xs"></i>
-                            </div>
-                            <input 
-                                type="password" 
-                                id="clave" 
-                                required
-                                autocomplete="current-password"
-                                placeholder="••••••••••••" 
-                                class="w-full bg-slate-900/90 border border-slate-800/90 rounded-xl py-3.5 pl-14 pr-11 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all duration-200 font-medium shadow-inner"
+                    <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Medio de Cobro</span>
+                            <select 
+                                onchange="updateTurnoPaymentMethod('${turno.id}', this.value)" 
+                                class="bg-slate-950/80 border border-slate-800 rounded-xl py-1.5 px-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-primary font-medium"
                             >
+                                ${paymentOptionsHtml}
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Estado</span>
                             <button 
-                                type="button" 
-                                onclick="togglePassword()" 
-                                class="absolute right-3.5 z-10 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none p-1"
-                                tabindex="-1"
+                                onclick="toggleTurnoPaidStatus('${turno.id}')" 
+                                class="px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${isPaid ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20' : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'}"
                             >
-                                <i id="eye-icon" class="fas fa-eye text-xs"></i>
+                                <i class="fas ${isPaid ? 'fa-check-circle' : 'fa-circle'}"></i>
+                                <span>${isPaid ? 'Cobrado' : 'Marcar Cobrado'}</span>
                             </button>
                         </div>
                     </div>
+                `;
 
-                    <!-- BOTÓN DE INGRESO -->
-                    <button 
-                        type="submit" 
-                        id="submitBtn" 
-                        class="btn-shimmer w-full relative rounded-xl bg-gradient-to-r from-brand-dark via-brand-primary to-brand-dark bg-[length:200%_auto] hover:bg-right py-3.5 px-4 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-brand-primary/20 hover:shadow-brand-primary/35 transition-all duration-300 transform active:scale-[0.99] flex items-center justify-center gap-2 mt-4"
-                    >
-                        <span id="btnText">Ingresar al Sistema</span>
-                        <i id="btnIcon" class="fas fa-arrow-right text-xs"></i>
-                    </button>
+                container.appendChild(card);
+            });
+        }
 
-                </form>
+        function toggleTurnoPaidStatus(turnoId) {
+            let turnos = getTurnosData();
+            const turno = turnos.find(t => t.id === turnoId);
+            if (!turno) return;
 
-                <!-- INSTAGRAM & WHATSAPP SUPPORT -->
-                <div class="mt-8 pt-6 border-t border-slate-800/80 grid grid-cols-2 gap-3">
-                    
-                    <!-- INSTAGRAM CARD -->
-                    <a 
-                        href="https://instagram.com/waitcars" 
-                        target="_blank" 
-                        class="group relative flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800/90 hover:border-pink-500/40 transition-all duration-200 shadow-md hover:shadow-pink-500/10 overflow-hidden"
-                    >
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-pink-500/20 via-purple-500/20 to-orange-500/20 border border-pink-500/30 flex items-center justify-center shrink-0">
-                            <i class="fab fa-instagram text-pink-400 text-base ig-animated-icon"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">Instagram</p>
-                            <p class="text-xs font-bold text-slate-200 group-hover:text-pink-300 truncate transition-colors">@waitcars</p>
-                        </div>
-                    </a>
+            turno.pagado = !turno.pagado;
+            saveTurnosData(turnos);
+            loadAgendaTurnos();
+        }
 
-                    <!-- WHATSAPP CARD -->
-                    <a 
-                        id="wspBtn" 
-                        href="#" 
-                        target="_blank" 
-                        class="group relative flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800/90 hover:border-emerald-500/40 transition-all duration-200 shadow-md hover:shadow-emerald-500/10 overflow-hidden"
-                    >
-                        <div class="relative w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
-                            <div class="wsp-radar-ring"></div>
-                            <i class="fab fa-whatsapp text-emerald-400 text-base wsp-animated-icon"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">Soporte 24/7</p>
-                            <p class="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate transition-colors">WhatsApp</p>
-                        </div>
-                    </a>
+        function updateTurnoPaymentMethod(turnoId, methodId) {
+            let turnos = getTurnosData();
+            const turno = turnos.find(t => t.id === turnoId);
+            if (!turno) return;
 
-                </div>
+            turno.metodoPago = methodId;
+            saveTurnosData(turnos);
+        }
 
-                <!-- DERECHOS RESERVADOS -->
-                <div class="mt-6 text-center pt-2">
-                    <p class="text-[11px] text-slate-500 font-medium tracking-wide">
-                        &copy; <span id="year"></span> Waitcars Inc. Todos los derechos reservados.
-                    </p>
-                </div>
+        function renderPaymentMethodsModal() {
+            const listContainer = document.getElementById('payment-methods-list');
+            const methods = getPaymentMethods();
+            listContainer.innerHTML = '';
 
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // CARGA DINÁMICA DE CONFIGURACIÓN DE WHATSAPP
-        async function loadWhatsAppConfig() {
-            const wspBtn = document.getElementById('wspBtn');
-            try {
-                const response = await fetch('../WhatsApp/wsp.json');
-                if (!response.ok) throw new Error();
+            methods.forEach(pm => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-2.5 bg-slate-950/60 border border-slate-800 rounded-xl text-xs";
                 
-                const data = await response.json();
-                const num = data.WhatsApp || '';
-                const msg = encodeURIComponent(data.Mensaje || 'Hola Waitcars, necesito asistencia técnica.');
-                
-                wspBtn.href = `https://wa.me/${num}?text=${msg}`;
-            } catch (error) {
-                wspBtn.href = 'https://wa.me/?text=' + encodeURIComponent('Hola Waitcars, necesito asistencia técnica.');
-            }
+                item.innerHTML = `
+                    <span class="font-bold text-slate-200">${pm.name}</span>
+                    ${pm.isDefault ? '<span class="text-[9px] text-slate-500 uppercase font-bold px-2 py-0.5 bg-slate-900 rounded-md">Sistema</span>' : `
+                        <button onclick="deletePaymentMethod('${pm.id}')" class="text-rose-400 hover:text-rose-300 p-1 transition-all" title="Eliminar método">
+                            <i class="fas fa-trash-can text-xs"></i>
+                        </button>
+                    `}
+                `;
+                listContainer.appendChild(item);
+            });
         }
 
-        // TOGGLE VISIBILIDAD DE CONTRASEÑA
-        function togglePassword() {
-            const passwordInput = document.getElementById('clave');
-            const eyeIcon = document.getElementById('eye-icon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.className = 'fas fa-eye-slash text-xs text-brand-primary';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.className = 'fas fa-eye text-xs text-slate-500';
-            }
-        }
+        function addNewPaymentMethod() {
+            const input = document.getElementById('input-nuevo-metodo');
+            const name = input.value.trim();
 
-        // CAJA DE ALERTAS PROFESIONAL
-        function showAlert(message, type) {
-            const alertBox = document.getElementById('alert-box');
-            const alertIconContainer = document.getElementById('alert-icon-container');
-            const alertIcon = document.getElementById('alert-icon');
-            const alertTitle = document.getElementById('alert-title');
-            const alertMsg = document.getElementById('alert-message');
-
-            alertBox.classList.remove('hidden');
-
-            if (type === 'error') {
-                alertBox.className = 'mb-6 p-4 rounded-2xl text-xs font-semibold bg-rose-950/60 border border-rose-500/30 text-rose-300 shadow-lg alert-animated';
-                alertIconContainer.className = 'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-rose-500/20 border border-rose-500/30 text-rose-400 shadow-inner';
-                alertIcon.className = 'fas fa-triangle-exclamation text-sm';
-                alertTitle.textContent = 'Acceso denegado';
-                alertTitle.className = 'text-[10px] uppercase tracking-wider font-extrabold text-rose-400 mb-0.5';
-            } else {
-                alertBox.className = 'mb-6 p-4 rounded-2xl text-xs font-semibold bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 shadow-lg alert-animated';
-                alertIconContainer.className = 'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 shadow-inner';
-                alertIcon.className = 'fas fa-circle-check text-sm';
-                alertTitle.textContent = 'Autenticación correcta';
-                alertTitle.className = 'text-[10px] uppercase tracking-wider font-extrabold text-emerald-400 mb-0.5';
+            if (!name) {
+                alert('Ingresa el nombre del método de pago.');
+                return;
             }
 
-            alertMsg.textContent = message;
+            const customId = 'pay_' + Date.now();
+            const customMethods = JSON.parse(localStorage.getItem('wc_payment_methods') || '[]');
+
+            customMethods.push({
+                id: customId,
+                name: name,
+                isDefault: false
+            });
+
+            localStorage.setItem('wc_payment_methods', JSON.stringify(customMethods));
+            input.value = '';
+            renderPaymentMethodsModal();
+            loadAgendaTurnos();
         }
 
-        // AUTENTICACIÓN CONTRA usuarios.json
-        async function handleLogin(event) {
-            event.preventDefault();
+        function deletePaymentMethod(id) {
+            let customMethods = JSON.parse(localStorage.getItem('wc_payment_methods') || '[]');
+            if (!confirm('¿Deseas eliminar este método de pago?')) return;
 
-            const userInput = document.getElementById('usuario').value.trim();
-            const passInput = document.getElementById('clave').value.trim();
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-            const btnIcon = document.getElementById('btnIcon');
+            customMethods = customMethods.filter(pm => pm.id !== id);
+            localStorage.setItem('wc_payment_methods', JSON.stringify(customMethods));
+            renderPaymentMethodsModal();
+            loadAgendaTurnos();
+        }
 
-            btnText.textContent = 'Autenticando...';
-            btnIcon.className = 'fas fa-circle-notch fa-spin text-xs';
-            submitBtn.disabled = true;
-
-            try {
-                let response = await fetch('../usuarios.json');
-                let usuarios = [];
-
-                if (response.ok) {
-                    usuarios = await response.json();
-                } else {
-                    response = await fetch('usuarios.json');
-                    if (response.ok) {
-                        usuarios = await response.json();
-                    }
-                }
-
-                const match = usuarios.find(u => u.usuario === userInput && u.clave === passInput);
-
-                if (match) {
-                    showAlert('Credenciales verificadas. Redirigiendo...', 'success');
-                    
-                    localStorage.setItem('waitcars_session', JSON.stringify({
-                        usuario: match.usuario,
-                        nombre: match.nombre || match.usuario,
-                        token: 'wc_' + Math.random().toString(36).substring(2),
-                        timestamp: new Date().getTime()
-                    }));
-
-                    setTimeout(() => {
-                        window.location.href = 'panel/dashboard.html';
-                    }, 600);
-                } else {
-                    showAlert('Usuario o contraseña incorrectos.', 'error');
-                    resetButton();
-                }
-
-            } catch (error) {
-                showAlert('Usuario o contraseña incorrectos.', 'error');
-                resetButton();
+        function openModal(id) {
+            if (id === 'modal-nuevo-metodo') {
+                renderPaymentMethodsModal();
             }
+            document.getElementById(id).classList.remove('hidden');
         }
 
-        function resetButton() {
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-            const btnIcon = document.getElementById('btnIcon');
-            
-            btnText.textContent = 'Ingresar al Sistema';
-            btnIcon.className = 'fas fa-arrow-right text-xs';
-            submitBtn.disabled = false;
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
         }
-
-        loadWhatsAppConfig();
     </script>
 </body>
 </html>
