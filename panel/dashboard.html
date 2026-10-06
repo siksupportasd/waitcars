@@ -213,6 +213,14 @@
             <!-- VISTA INICIO -->
             <div id="view-inicio" class="space-y-4">
                 
+                <!-- FECHA ESCRITA CENTRADA (ARRIBA DE LAS CARDS) -->
+                <div class="text-center my-1">
+                    <span id="current-date-display" class="text-xs sm:text-sm font-extrabold text-cyan-400 tracking-wider uppercase bg-brand-primary/10 border border-brand-primary/20 px-3.5 py-1 rounded-full inline-flex items-center gap-2 shadow-sm">
+                        <i class="fas fa-calendar-day text-brand-primary text-xs"></i>
+                        <span id="date-text">Cargando fecha...</span>
+                    </span>
+                </div>
+
                 <!-- CARDS DE ESTADÍSTICAS COMPACTAS -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     
@@ -476,8 +484,21 @@
             const session = JSON.parse(sessionData);
             document.getElementById('user-display-name').textContent = session.nombre || session.usuario;
             
+            renderCurrentDate();
             loadDashboardStats();
         });
+
+        // FORMATEA Y MUESTRA LA FECHA ESCRITA (Ejemplo: "21 de Septiembre")
+        function renderCurrentDate() {
+            const now = new Date();
+            const opciones = { day: 'numeric', month: 'long' };
+            let fechaTexto = now.toLocaleDateString('es-ES', opciones);
+            
+            // Capitalizar el mes (ej. "21 de Septiembre")
+            fechaTexto = fechaTexto.replace(/de ([a-z])/g, (match, letter) => 'de ' + letter.toUpperCase());
+
+            document.getElementById('date-text').textContent = fechaTexto;
+        }
 
         function toggleNotifications() {
             document.getElementById('notif-dropdown').classList.toggle('hidden');
@@ -511,6 +532,7 @@
             if (section === 'inicio') {
                 viewIframeContainer.classList.add('hidden');
                 viewInicio.classList.remove('hidden');
+                renderCurrentDate();
                 loadDashboardStats();
             } else {
                 viewInicio.classList.add('hidden');
