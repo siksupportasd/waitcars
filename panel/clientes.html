@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 select-none">
+<head>
+    <meta charset="UTF-8">
+    <!-- Evitar zoom y scroll descontrolado en móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Waitcars - Gestión Profesional de Clientes</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0b3b82',
+                            primary: '#1d8ef1',
+                            accent: '#00c6ff',
+                            slate: '#07162c'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html, body {
+            touch-action: manipulation;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020712;
+        }
+
+        input, select, textarea, button {
+            font-size: 16px !important;
+        }
+
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(29, 142, 241, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .glass-card {
+            background: rgba(7, 22, 44, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-blur {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Scrollbar estilizado */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(2, 7, 18, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(29, 142, 241, 0.35);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(29, 142, 241, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#020712] text-slate-100 p-3 sm:p-6 bg-grid-pattern">
+
+    <!-- CABECERA PRINCIPAL DE LA VISTA -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-widest">
+                    Módulo Privado
+                </span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2.5 mt-1">
+                <i class="fas fa-users-gear text-brand-primary"></i> Directorio de Clientes
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Gestión de cartera, historial de servicios y remarketing automatizado.</p>
+        </div>
+
+        <button 
+            onclick="openModal('modal-nuevo-cliente')" 
+            class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-dark text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/20 hover:opacity-95 active:scale-95 transition-all cursor-pointer border border-brand-primary/40"
+        >
+            <i class="fas fa-user-plus text-sm"></i> Registrar Cliente
+        </button>
+    </div>
+
+    <!-- PANEL DE BÚSQUEDA, FILTROS AVANZADOS Y ORDENAMIENTO -->
+    <div class="glass-card p-4 rounded-2xl mb-6 space-y-3.5">
+        
+        <div class="flex flex-col lg:flex-row gap-3 items-center justify-between">
+            
+            <!-- Campo de Búsqueda por Texto -->
+            <div class="relative w-full lg:w-80">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    onkeyup="applyFilters()" 
+                    placeholder="Buscar cliente, DNI, modelo o WSP..." 
+                    class="w-full bg-slate-900/90 border border-slate-800 rounded-xl py-2 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-brand-primary transition-all placeholder:text-slate-500"
+                >
+                <i class="fas fa-search absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            </div>
+
+            <!-- Selector de Criterio de Ordenamiento -->
+            <div class="flex items-center gap-2 w-full lg:w-auto justify-end">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Ordenar por:</label>
+                <select 
+                    id="sort-select" 
+                    onchange="applyFilters()" 
+                    class="bg-slate-900 border border-slate-800 rounded-xl py-1.5 px-3 text-xs text-slate-200 focus:outline-none focus:border-brand-primary cursor-pointer font-medium"
+                >
+                    <option value="last_visit_desc">Última visita (Más recientes primero)</option>
+                    <option value="last_visit_asc">Ausencia (Más tiempo sin venir)</option>
+                    <option value="lavados_desc">Mayor frecuencia (Más lavados)</option>
+                    <option value="nombre_asc">Nombre (A - Z)</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="border-t border-slate-800/80 pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            
+            <!-- Selector de Filtro de Inactividad con Contadores Integrados -->
+            <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 sm:pb-0">
+                <button 
+                    onclick="setInactivityFilter('all', this)" 
+                    class="filter-btn active-filter px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-brand-primary text-white border border-brand-primary transition-all whitespace-nowrap flex items-center gap-1.5"
+                >
+                    <span>Todos</span>
+                    <span id="badge-count-all" class="px-1.5 py-0.2 rounded-full bg-slate-950/40 text-[9px]">0</span>
+                </button>
+
+                <button 
+                    onclick="setInactivityFilter('1w', this)" 
+                    class="filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
+                >
+                    <i class="fas fa-clock text-[10px] text-amber-400"></i>
+                    <span>+1 Sem. sin venir</span>
+                    <span id="badge-count-1w" class="px-1.5 py-0.2 rounded-full bg-slate-800 text-[9px] text-slate-300">0</span>
+                </button>
+
+                <button 
+                    onclick="setInactivityFilter('2w', this)" 
+                    class="filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
+                >
+                    <i class="fas fa-triangle-exclamation text-[10px] text-orange-400"></i>
+                    <span>+2 Sem. sin venir</span>
+                    <span id="badge-count-2w" class="px-1.5 py-0.2 rounded-full bg-slate-800 text-[9px] text-slate-300">0</span>
+                </button>
+
+                <button 
+                    onclick="setInactivityFilter('1m', this)" 
+                    class="filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
+                >
+                    <i class="fas fa-circle-exclamation text-[10px] text-rose-400"></i>
+                    <span>+1 Mes sin venir</span>
+                    <span id="badge-count-1m" class="px-1.5 py-0.2 rounded-full bg-slate-800 text-[9px] text-slate-300">0</span>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CONTENEDOR DE CARDS DE CLIENTES -->
+    <div id="clients-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Renderizado dinámico desde JavaScript -->
+    </div>
+
+
+    <!-- MODAL 1: REGISTRAR NUEVO CLIENTE -->
+    <div id="modal-nuevo-cliente" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl">
+            <button onclick="closeModal('modal-nuevo-cliente')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
+                <i class="fas fa-xmark"></i>
+            </button>
+            
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-3">
+                <i class="fas fa-user-plus text-brand-primary"></i> Registrar Nuevo Cliente
+            </h3>
+
+            <form onsubmit="createNewClient(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DNI del Cliente</label>
+                    <input type="text" id="new-dni" required placeholder="Ej: 38123456" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nombre y Apellido</label>
+                    <input type="text" id="new-nombre" required placeholder="Ej: Carlos Gómez" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vehículo / Modelo</label>
+                        <input type="text" id="new-vehiculo" required placeholder="Ej: Toyota Hilux" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">WhatsApp</label>
+                        <input type="text" id="new-wsp" required placeholder="Ej: 549264..." class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-brand-primary text-white font-bold text-xs uppercase tracking-wider hover:bg-brand-primary/90 transition-all mt-1 shadow-lg shadow-brand-primary/20">
+                    Guardar en Sistema
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL 2: TIMELINE Y FICHA COMPLETA -->
+    <div id="modal-timeline" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-5 relative border border-slate-700 shadow-2xl flex flex-col max-h-[90vh]">
+            <button onclick="closeModal('modal-timeline')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
+                <i class="fas fa-xmark"></i>
+            </button>
+            
+            <div class="mb-4 pb-3 border-b border-slate-800">
+                <span class="text-[9px] font-black uppercase tracking-widest text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-2 py-0.5 rounded-full">Historial de Servicios</span>
+                <h3 id="timeline-client-name" class="text-lg font-black text-white mt-1">Nombre Cliente</h3>
+                <p id="timeline-client-info" class="text-xs text-slate-400 mt-0.5">DNI: - | Vehículo: -</p>
+            </div>
+
+            <!-- TIMELINE LIST CONTAINER -->
+            <div class="flex-1 overflow-y-auto pr-2 space-y-4" id="timeline-list">
+                <!-- Se genera dinámicamente -->
+            </div>
+
+            <div class="pt-3 mt-3 border-t border-slate-800 flex justify-end">
+                <button onclick="closeModal('modal-timeline')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-slate-700 transition-all">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL 3: ENVIAR MENSAJE DE FIDELIZACIÓN POR WHATSAPP -->
+    <div id="modal-wsp-promo" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl">
+            <button onclick="closeModal('modal-wsp-promo')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
+                <i class="fas fa-xmark"></i>
+            </button>
+            
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-1">
+                <i class="fab fa-whatsapp text-emerald-400 text-lg"></i> Aviso de Fidelización
+            </h3>
+            <p id="wsp-modal-subtitle" class="text-xs text-slate-400 mb-3">Selecciona la plantilla de mensaje para el cliente.</p>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Plantilla de Mensaje</label>
+                    <select id="wsp-template-select" onchange="updateWspPreview()" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <option value="friendly">1. Recordatorio Amigable (Invitar a agendar)</option>
+                        <option value="promo">2. Oferta / Descuento Especial</option>
+                        <option value="maintenance">3. Recomendación de Cuidado del Vehículo</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vista Previa del Texto</label>
+                    <textarea id="wsp-preview-text" rows="4" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-sans leading-relaxed resize-none"></textarea>
+                </div>
+
+                <button onclick="sendWspDirect()" class="w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-emerald-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+                    <i class="fab fa-whatsapp text-sm"></i> Abrir Chat de WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. VERIFICACIÓN DE SEGURIDAD (PÁGINA PRIVADA)
+        document.addEventListener('DOMContentLoaded', () => {
+            const sessionData = localStorage.getItem('waitcars_session');
+            if (!sessionData) {
+                // Redireccionar si no existe sesión válida
+                window.location.href = 'auth/login.html';
+                return;
+            }
+
+            // Si hay sesión activa, cargar el directorio
+            loadClientModule();
+        });
+
+        let currentInactivityFilter = 'all';
+        let currentTargetClient = null;
+
+        function getClientsData() {
+            return JSON.parse(localStorage.getItem('wc_clientes') || '[]');
+        }
+
+        function getTurnosData() {
+            return JSON.parse(localStorage.getItem('wc_turnos') || '[]');
+        }
+
+        function loadClientModule() {
+            updateBadgesCount();
+            applyFilters();
+        }
+
+        function setInactivityFilter(filterType, btn) {
+            currentInactivityFilter = filterType;
+            
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.className = "filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5";
+            });
+
+            btn.className = "filter-btn active-filter px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-brand-primary text-white border border-brand-primary transition-all whitespace-nowrap flex items-center gap-1.5";
+            
+            applyFilters();
+        }
+
+        // CÁLCULO DINÁMICO DE CONTADORES DE INACTIVIDAD EN LOS BADGES
+        function updateBadgesCount() {
+            const clientes = getClientsData();
+            const turnos = getTurnosData();
+            const now = new Date();
+
+            let countAll = clientes.length;
+            let count1w = 0;
+            let count2w = 0;
+            let count1m = 0;
+
+            clientes.forEach(c => {
+                const clientTurnos = turnos.filter(t => t.dni === c.dni);
+                let lastTurnoDate = null;
+
+                if (clientTurnos.length > 0) {
+                    clientTurnos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    lastTurnoDate = new Date(clientTurnos[0].fecha);
+                } else if (c.fechaAlta) {
+                    lastTurnoDate = new Date(c.fechaAlta);
+                }
+
+                if (lastTurnoDate) {
+                    const diffDays = (now - lastTurnoDate) / (1000 * 60 * 60 * 24);
+                    if (diffDays >= 7) count1w++;
+                    if (diffDays >= 14) count2w++;
+                    if (diffDays >= 30) count1m++;
+                }
+            });
+
+            document.getElementById('badge-count-all').textContent = countAll;
+            document.getElementById('badge-count-1w').textContent = count1w;
+            document.getElementById('badge-count-2w').textContent = count2w;
+            document.getElementById('badge-count-1m').textContent = count1m;
+        }
+
+        // APLICAR BÚSQUEDA, FILTROS Y ORDENAMIENTO
+        function applyFilters() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const sortCriteria = document.getElementById('sort-select').value;
+            
+            const clientes = getClientsData();
+            const turnos = getTurnosData();
+            const now = new Date();
+
+            let result = clientes.filter(c => {
+                // Filtro de Texto
+                const matchesText = (c.nombre || '').toLowerCase().includes(query) ||
+                                    (c.dni || '').toLowerCase().includes(query) ||
+                                    (c.vehiculo || '').toLowerCase().includes(query) ||
+                                    (c.wsp || '').toLowerCase().includes(query);
+
+                if (!matchesText) return false;
+
+                // Cargar fecha del último lavado
+                const clientTurnos = turnos.filter(t => t.dni === c.dni);
+                let lastTurnoDate = null;
+
+                if (clientTurnos.length > 0) {
+                    clientTurnos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    lastTurnoDate = new Date(clientTurnos[0].fecha);
+                } else if (c.fechaAlta) {
+                    lastTurnoDate = new Date(c.fechaAlta);
+                }
+
+                c._lastTurnoDate = lastTurnoDate;
+                c._daysAgo = lastTurnoDate ? Math.floor((now - lastTurnoDate) / (1000 * 60 * 60 * 24)) : 999;
+
+                // Filtro de Inactividad
+                if (currentInactivityFilter === 'all') return true;
+                if (!lastTurnoDate) return false;
+
+                if (currentInactivityFilter === '1w') return c._daysAgo >= 7;
+                if (currentInactivityFilter === '2w') return c._daysAgo >= 14;
+                if (currentInactivityFilter === '1m') return c._daysAgo >= 30;
+
+                return true;
+            });
+
+            // Ordenamiento
+            result.sort((a, b) => {
+                if (sortCriteria === 'last_visit_desc') return a._daysAgo - b._daysAgo;
+                if (sortCriteria === 'last_visit_asc') return b._daysAgo - a._daysAgo;
+                if (sortCriteria === 'lavados_desc') return (b.lavados || 0) - (a.lavados || 0);
+                if (sortCriteria === 'nombre_asc') return (a.nombre || '').localeCompare(b.nombre || '');
+                return 0;
+            });
+
+            renderClientsList(result);
+        }
+
+        // RENDERIZADO DE LAS TARJETAS DE CLIENTES
+        function renderClientsList(list) {
+            const container = document.getElementById('clients-container');
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 glass-card rounded-2xl border border-slate-800">
+                        <i class="fas fa-users-slash text-3xl text-slate-600 mb-2"></i>
+                        <p class="text-xs text-slate-400 font-medium">No se encontraron clientes que coincidan con el filtro seleccionado.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const turnos = getTurnosData();
+
+            list.forEach(c => {
+                const clientTurnos = turnos.filter(t => t.dni === c.dni);
+                const totalLavados = c.lavados || clientTurnos.length || 0;
+                const totalMonto = clientTurnos.reduce((acc, curr) => acc + (curr.monto || 0), 0);
+
+                // Estado según días sin venir
+                let statusBadge = '';
+                if (c._daysAgo < 14) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">Activo</span>`;
+                } else if (c._daysAgo >= 14 && c._daysAgo < 30) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500/15 border border-amber-500/30 text-amber-400">Ausente (+2 sem)</span>`;
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-rose-500/15 border border-rose-500/30 text-rose-400">Inactivo (+1 mes)</span>`;
+                }
+
+                // Iniciales para el Avatar
+                const initial = (c.nombre || 'C').charAt(0).toUpperCase();
+
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-2xl relative overflow-hidden flex flex-col justify-between space-y-3 hover:border-brand-primary/40 transition-all group";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-dark to-brand-primary text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md">
+                                    ${initial}
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-black text-white group-hover:text-brand-primary transition-colors">${c.nombre}</h3>
+                                    <p class="text-[10px] text-slate-400 font-mono">DNI: ${c.dni}</p>
+                                </div>
+                            </div>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="mt-3.5 pt-3 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-[11px]">
+                            <div>
+                                <span class="text-[9px] text-slate-500 uppercase font-bold block">Vehículo</span>
+                                <span class="font-bold text-slate-200 truncate block">${c.vehiculo}</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-500 uppercase font-bold block">Servicios</span>
+                                <span class="font-bold text-brand-primary">${totalLavados} lavados</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-500 uppercase font-bold block">Última Visita</span>
+                                <span class="font-bold text-slate-200">${c._daysAgo === 999 ? 'N/A' : `Hace ${c._daysAgo}d`}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2">
+                        <button 
+                            onclick="openTimeline('${c.dni}')" 
+                            class="flex-1 py-1.5 px-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-primary/50 text-[10px] font-bold flex items-center justify-center gap-1.5 transition-all"
+                        >
+                            <i class="fas fa-clock-rotate-left text-brand-primary"></i> Historial
+                        </button>
+
+                        ${c.wsp ? `
+                            <button 
+                                onclick="openWspModal('${c.dni}')" 
+                                class="py-1.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 text-[10px] font-black flex items-center justify-center gap-1.5 transition-all"
+                                title="Enviar aviso por WhatsApp"
+                            >
+                                <i class="fab fa-whatsapp text-xs"></i> Avisar
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // ABRIR FICHA E HISTORIAL COMPLETO DE SERVICIOS
+        function openTimeline(dni) {
+            const clientes = getClientsData();
+            const turnos = getTurnosData();
+
+            const cliente = clientes.find(c => c.dni === dni);
+            if (!cliente) return;
+
+            document.getElementById('timeline-client-name').textContent = cliente.nombre;
+            document.getElementById('timeline-client-info').textContent = `DNI: ${cliente.dni} | WSP: ${cliente.wsp || 'Sin registrar'} | Vehículo habitual: ${cliente.vehiculo}`;
+
+            const clientTurnos = turnos.filter(t => t.dni === dni);
+            clientTurnos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            const listContainer = document.getElementById('timeline-list');
+            listContainer.innerHTML = '';
+
+            if (clientTurnos.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        Sin lavados ni turnos agendados en el historial.
+                    </div>
+                `;
+            } else {
+                clientTurnos.forEach((t) => {
+                    const f = new Date(t.fecha);
+                    const fechaFormat = f.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                    const item = document.createElement('div');
+                    item.className = "relative pl-6 pb-4 border-l-2 border-brand-primary/30 last:border-l-0 last:pb-0";
+
+                    item.innerHTML = `
+                        <div class="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-brand-primary ring-4 ring-slate-950"></div>
+
+                        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-extrabold text-brand-primary uppercase tracking-wider">${fechaFormat} - ${t.hora || 'S/H'} hs</span>
+                                <span class="text-xs font-black text-emerald-400">$${(t.monto || 0).toFixed(2)}</span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-200">${t.vehiculo || cliente.vehiculo}</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Servicio agendado y registrado con éxito.</p>
+                        </div>
+                    `;
+
+                    listContainer.appendChild(item);
+                });
+            }
+
+            openModal('modal-timeline');
+        }
+
+        // MODAL DE MENSAJES DE FIDELIZACIÓN POR WHATSAPP
+        function openWspModal(dni) {
+            const clientes = getClientsData();
+            currentTargetClient = clientes.find(c => c.dni === dni);
+            if (!currentTargetClient) return;
+
+            document.getElementById('wsp-modal-subtitle').textContent = `Destinatario: ${currentTargetClient.nombre} (${currentTargetClient.vehiculo})`;
+            document.getElementById('wsp-template-select').value = 'friendly';
+            
+            updateWspPreview();
+            openModal('modal-wsp-promo');
+        }
+
+        function updateWspPreview() {
+            if (!currentTargetClient) return;
+
+            const templateType = document.getElementById('wsp-template-select').value;
+            const textarea = document.getElementById('wsp-preview-text');
+
+            if (templateType === 'friendly') {
+                textarea.value = `Hola ${currentTargetClient.nombre}! 👋 Te saludamos de Waitcars. Notamos que hace unos días no traes tu ${currentTargetClient.vehiculo}. Querías saber si deseas agendar un turno para dejarlo impecable esta semana? 🚗✨`;
+            } else if (templateType === 'promo') {
+                textarea.value = `Hola ${currentTargetClient.nombre}! 🎁 En Waitcars tenemos una atención especial para tu ${currentTargetClient.vehiculo}. Agendando tu turno hoy te reservamos el mejor horario disponible. Te gustaría aprovecharlo? 📲`;
+            } else if (templateType === 'maintenance') {
+                textarea.value = `Hola ${currentTargetClient.nombre}! 🚿 Recordá que para mantener la pintura y brillo de tu ${currentTargetClient.vehiculo} se recomienda un lavado periódico. Avísanos y te guardamos un lugar en nuestra agenda!`;
+            }
+        }
+
+        function sendWspDirect() {
+            if (!currentTargetClient || !currentTargetClient.wsp) return;
+
+            const text = encodeURIComponent(document.getElementById('wsp-preview-text').value);
+            const cleanPhone = currentTargetClient.wsp.replace(/[^0-9]/g, '');
+            const url = `https://wa.me/${cleanPhone}?text=${text}`;
+
+            window.open(url, '_blank');
+            closeModal('modal-wsp-promo');
+        }
+
+        // CREAR NUEVO CLIENTE
+        function createNewClient(event) {
+            event.preventDefault();
+
+            const dni = document.getElementById('new-dni').value.trim();
+            const nombre = document.getElementById('new-nombre').value.trim();
+            const vehiculo = document.getElementById('new-vehiculo').value.trim();
+            const wsp = document.getElementById('new-wsp').value.trim();
+
+            let clientes = getClientsData();
+
+            if (clientes.some(c => c.dni === dni)) {
+                alert('Atención: Ya existe un cliente registrado con ese número de DNI.');
+                return;
+            }
+
+            clientes.push({
+                dni,
+                nombre,
+                vehiculo,
+                wsp,
+                lavados: 0,
+                montoTotal: 0,
+                fechaAlta: new Date().toISOString()
+            });
+
+            localStorage.setItem('wc_clientes', JSON.stringify(clientes));
+
+            closeModal('modal-nuevo-cliente');
+            event.target.reset();
+            
+            loadClientModule();
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
