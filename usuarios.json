@@ -3,5 +3,11 @@
     "usuario": "admin",
     "clave": "123456",
     "nombre": "Administrador"
+  },
+
+  {
+    "usuario": "agustino",
+    "clave": "123456",
+    "nombre": "Dueño de Waitcars"
   }
 ]
