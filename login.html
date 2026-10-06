@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waitcars - Acceso al Sistema</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0b3b82',
+                            primary: '#1d8ef1',
+                            accent: '#00c6ff',
+                            slate: '#07162c'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Canvas de Partículas en Fondo */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Ambient Glows */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            opacity: 0.18;
+        }
+
+        /* Glass Container Unificado */
+        .enterprise-card {
+            background: rgba(7, 22, 44, 0.75);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(11, 59, 130, 0.25);
+        }
+
+        /* Línea Divisora Neón */
+        .divider-glow {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(29, 142, 241, 0.6), rgba(0, 198, 255, 0.8), rgba(29, 142, 241, 0.6), transparent);
+            box-shadow: 0 0 12px rgba(29, 142, 241, 0.5);
+        }
+
+        /* --- ANIMACIÓN EN LA FLECHA DE VOLVER AL INICIO --- */
+        .back-arrow-icon {
+            animation: arrow-bounce-left 2s ease-in-out infinite;
+        }
+
+        @keyframes arrow-bounce-left {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-4px); }
+        }
+
+        /* --- ANIMACIONES EN LA PALABRA WAITCARS --- */
+        .logo-text-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #1d8ef1;
+            animation: typing 1s steps(10, end), blink-caret 0.5s step-end infinite alternate, remove-border 0.1s 1.2s forwards;
+        }
+
+        /* Animación permanente posterior al tipeo */
+        .logo-text-container span.text-[#1d8ef1] {
+            animation: text-pulse-glow 3s ease-in-out infinite 1.3s alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #1d8ef1; }
+        }
+
+        @keyframes remove-border {
+            to { border-right: none; }
+        }
+
+        @keyframes text-pulse-glow {
+            0% {
+                text-shadow: 0 0 5px rgba(29, 142, 241, 0.4);
+                color: #1d8ef1;
+            }
+            100% {
+                text-shadow: 0 0 18px rgba(0, 198, 255, 0.9), 0 0 30px rgba(29, 142, 241, 0.6);
+                color: #38bdf8;
+            }
+        }
+
+        /* --- ANIMACIÓN PERMANENTE EN EL BOTÓN INGRESAR --- */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.35) 50%,
+                transparent 70%
+            );
+            transform: rotate(25deg);
+            animation: btn-sweep 3.5s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes btn-sweep {
+            0% { left: -150%; }
+            35%, 100% { left: 150%; }
+        }
+
+        /* --- ANIMACIONES PERMANENTES DE REDES SOCIALES --- */
+        .ig-animated-icon {
+            animation: float-ig 3s ease-in-out infinite, pulse-ig-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes float-ig {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(4deg); }
+        }
+
+        @keyframes pulse-ig-glow {
+            0% { filter: drop-shadow(0 0 2px rgba(236, 72, 153, 0.3)); }
+            100% { filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.8)); }
+        }
+
+        .wsp-radar-ring {
+            position: absolute;
+            inset: -4px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(16, 185, 129, 0.6);
+            animation: radar-expand 2s infinite cubic-bezier(0, 0.2, 0.8, 1);
+            pointer-events: none;
+        }
+
+        @keyframes radar-expand {
+            0% { transform: scale(0.85); opacity: 0.9; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
+
+        .wsp-animated-icon {
+            animation: pulse-wsp 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-wsp {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.4)); }
+            100% { transform: scale(1.12); filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.9)); }
+        }
+
+        /* Focus Icon Styling */
+        .input-group:focus-within .input-icon-bg {
+            background-color: rgba(29, 142, 241, 0.15);
+            border-color: rgba(29, 142, 241, 0.5);
+            color: #1d8ef1;
+            box-shadow: 0 0 12px rgba(29, 142, 241, 0.3);
+        }
+
+        /* ANIMACIÓN ALERTAS */
+        @keyframes alert-pop {
+            0% { opacity: 0; transform: translateY(-8px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .alert-animated {
+            animation: alert-pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#020712] text-slate-100 antialiased selection:bg-brand-primary selection:text-white relative overflow-x-hidden flex items-center justify-center p-4 sm:p-6">
+
+    <!-- CANVAS ANIMADO -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Destellos Lumínicos de Fondo -->
+    <div class="glow-orb w-[500px] h-[500px] bg-brand-primary -top-40 -left-20 z-0"></div>
+    <div class="glow-orb w-[600px] h-[600px] bg-brand-dark bottom-0 right-0 z-0"></div>
+
+    <!-- BOTÓN VOLVER AL INICIO CON ANIMACIÓN PERMANENTE EN LA FLECHA -->
+    <a 
+        href="../index.html" 
+        class="fixed top-6 left-6 z-30 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 text-slate-300 hover:text-white hover:border-brand-primary/50 hover:bg-slate-800/90 text-xs font-semibold transition-all duration-300 backdrop-blur-md shadow-2xl group"
+    >
+        <i class="fas fa-arrow-left text-xs text-brand-primary back-arrow-icon"></i>
+        <span>Volver al inicio</span>
+    </a>
+
+    <!-- CONTAINER CENTRADO -->
+    <div class="relative z-10 w-full max-w-md my-auto pt-10 sm:pt-0">
+        
+        <!-- CARD UNIFICADA -->
+        <div class="enterprise-card rounded-3xl overflow-hidden shadow-2xl transition-all duration-300">
+            
+            <!-- SECCIÓN SUPERIOR: BRANDING Y PRESENTACIÓN -->
+            <div class="p-8 pb-6 bg-gradient-to-b from-[#0b2346]/60 via-[#07162c]/40 to-transparent text-center relative overflow-hidden">
+                
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 bg-brand-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                <!-- LOGOTIPO ORIGINAL CON TIPOGRAFÍA RESTAURADA Y ANIMACIÓN PERMANENTE EN LA PALABRA -->
+                <div class="h-14 flex items-center justify-center mb-1">
+                    <div class="logo-text-container text-4xl sm:text-5xl font-extrabold tracking-tight select-none py-1">
+                        <span class="text-white font-black drop-shadow-md">Wait</span><span class="text-[#1d8ef1] font-black ml-0.5 drop-shadow-md">cars</span>
+                    </div>
+                </div>
+
+                <p class="text-xs sm:text-sm font-medium leading-relaxed max-w-xs mx-auto bg-gradient-to-r from-slate-200 via-slate-300 to-slate-400 bg-clip-text text-transparent">
+                    Inicia sesión con tus credenciales asignadas para administrar y escalar tu negocio.
+                </p>
+            </div>
+
+            <!-- LÍNEA DIVISORA DEGRADADA -->
+            <div class="relative my-1 px-8">
+                <div class="divider-glow w-full"></div>
+            </div>
+
+            <!-- SECCIÓN INFERIOR: FORMULARIO, REDES Y SOPORTE -->
+            <div class="p-8 pt-6 bg-slate-950/70">
+                
+                <!-- CAJA DE ALERTAS HIPER PROFESIONAL Y PRESENTABLE -->
+                <div id="alert-box" class="hidden mb-6 p-4 rounded-2xl text-xs font-semibold backdrop-blur-xl transition-all duration-300 alert-animated">
+                    <div class="flex items-center gap-3.5">
+                        <div id="alert-icon-container" class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border shadow-inner">
+                            <i id="alert-icon" class="text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p id="alert-title" class="text-[10px] uppercase tracking-wider font-extrabold opacity-80 mb-0.5"></p>
+                            <p id="alert-message" class="text-xs font-bold leading-tight tracking-wide"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORMULARIO DE ACCESO -->
+                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+                    
+                    <!-- CAMPO USUARIO -->
+                    <div class="input-group">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                            Usuario del Sistema
+                        </label>
+                        <div class="relative flex items-center">
+                            <div class="input-icon-bg absolute left-2.5 z-10 w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 transition-all duration-300 pointer-events-none">
+                                <i class="fas fa-shield-halved text-xs"></i>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="usuario" 
+                                required
+                                autocomplete="username"
+                                placeholder="Nombre de usuario" 
+                                class="w-full bg-slate-900/90 border border-slate-800/90 rounded-xl py-3.5 pl-14 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all duration-200 font-medium shadow-inner"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- CAMPO CONTRASEÑA -->
+                    <div class="input-group">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                            Contraseña de Acceso
+                        </label>
+                        <div class="relative flex items-center">
+                            <div class="input-icon-bg absolute left-2.5 z-10 w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 transition-all duration-300 pointer-events-none">
+                                <i class="fas fa-lock text-xs"></i>
+                            </div>
+                            <input 
+                                type="password" 
+                                id="clave" 
+                                required
+                                autocomplete="current-password"
+                                placeholder="••••••••••••" 
+                                class="w-full bg-slate-900/90 border border-slate-800/90 rounded-xl py-3.5 pl-14 pr-11 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all duration-200 font-medium shadow-inner"
+                            >
+                            <button 
+                                type="button" 
+                                onclick="togglePassword()" 
+                                class="absolute right-3.5 z-10 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none p-1"
+                                tabindex="-1"
+                            >
+                                <i id="eye-icon" class="fas fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BOTÓN DE INGRESO CON ANIMACIÓN PERMANENTE -->
+                    <button 
+                        type="submit" 
+                        id="submitBtn" 
+                        class="btn-shimmer w-full relative rounded-xl bg-gradient-to-r from-brand-dark via-brand-primary to-brand-dark bg-[length:200%_auto] hover:bg-right py-3.5 px-4 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-brand-primary/20 hover:shadow-brand-primary/35 transition-all duration-300 transform active:scale-[0.99] flex items-center justify-center gap-2 mt-4"
+                    >
+                        <span id="btnText">Ingresar al Sistema</span>
+                        <i id="btnIcon" class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                    </button>
+
+                </form>
+
+                <!-- INSTAGRAM & WHATSAPP SUPPORT CON ANIMACIONES PERMANENTES -->
+                <div class="mt-8 pt-6 border-t border-slate-800/80 grid grid-cols-2 gap-3">
+                    
+                    <!-- INSTAGRAM CARD -->
+                    <a 
+                        href="https://instagram.com/waitcars" 
+                        target="_blank" 
+                        class="group relative flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800/90 hover:border-pink-500/40 transition-all duration-300 shadow-md hover:shadow-pink-500/10 overflow-hidden"
+                    >
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-pink-500/20 via-purple-500/20 to-orange-500/20 border border-pink-500/30 flex items-center justify-center shrink-0">
+                            <i class="fab fa-instagram text-pink-400 text-base ig-animated-icon"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">Instagram</p>
+                            <p class="text-xs font-bold text-slate-200 group-hover:text-pink-300 truncate transition-colors">@waitcars</p>
+                        </div>
+                    </a>
+
+                    <!-- WHATSAPP CARD -->
+                    <a 
+                        id="wspBtn" 
+                        href="#" 
+                        target="_blank" 
+                        class="group relative flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-slate-800/90 hover:border-emerald-500/40 transition-all duration-300 shadow-md hover:shadow-emerald-500/10 overflow-hidden"
+                    >
+                        <div class="relative w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                            <div class="wsp-radar-ring"></div>
+                            <i class="fab fa-whatsapp text-emerald-400 text-base wsp-animated-icon"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">Soporte 24/7</p>
+                            <p class="text-xs font-bold text-slate-200 group-hover:text-emerald-300 truncate transition-colors">WhatsApp</p>
+                        </div>
+                    </a>
+
+                </div>
+
+                <!-- DERECHOS RESERVADOS -->
+                <div class="mt-6 text-center pt-2">
+                    <p class="text-[11px] text-slate-500 font-medium tracking-wide">
+                        &copy; <span id="year"></span> Waitcars Inc. Todos los derechos reservados.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 1. EFECTO DINÁMICO DE FONDO: ESPUMA FLOTANTE, RUEDAS Y PARTÍCULAS
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 50;
+                this.size = Math.random() * 7 + 2; 
+                this.speedY = Math.random() * 1.2 + 0.3;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random() * 0.35 + 0.1;
+                this.type = Math.random() > 0.85 ? 'wheel' : 'bubble';
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.02;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+
+                if (this.y < -30) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                if (this.type === 'bubble') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(29, 142, 241, ${this.opacity * 0.4})`;
+                    ctx.fill();
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity * 0.8})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                } else {
+                    const r = this.size * 1.8;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(29, 142, 241, ${this.opacity * 0.7})`;
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+
+                    for (let i = 0; i < 4; i++) {
+                        const angle = (i * Math.PI) / 2;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                        ctx.strokeStyle = `rgba(0, 198, 255, ${this.opacity * 0.5})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+
+                ctx.restore();
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 2. CARGA DINÁMICA DE CONFIGURACIÓN DE WHATSAPP
+        async function loadWhatsAppConfig() {
+            const wspBtn = document.getElementById('wspBtn');
+            try {
+                const response = await fetch('../WhatsApp/wsp.json');
+                if (!response.ok) throw new Error();
+                
+                const data = await response.json();
+                const num = data.WhatsApp || '';
+                const msg = encodeURIComponent(data.Mensaje || 'Hola Waitcars, necesito asistencia técnica.');
+                
+                wspBtn.href = `https://wa.me/${num}?text=${msg}`;
+            } catch (error) {
+                wspBtn.href = 'https://wa.me/?text=' + encodeURIComponent('Hola Waitcars, necesito asistencia técnica.');
+            }
+        }
+
+        // 3. TOGGLE VISIBILIDAD DE CONTRASEÑA
+        function togglePassword() {
+            const passwordInput = document.getElementById('clave');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.className = 'fas fa-eye-slash text-xs text-brand-primary';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.className = 'fas fa-eye text-xs text-slate-500';
+            }
+        }
+
+        // 4. CAJA DE ALERTAS UNIFICADA HIPER PROFESIONAL
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alert-box');
+            const alertIconContainer = document.getElementById('alert-icon-container');
+            const alertIcon = document.getElementById('alert-icon');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMsg = document.getElementById('alert-message');
+
+            alertBox.classList.remove('hidden');
+
+            if (type === 'error') {
+                alertBox.className = 'mb-6 p-4 rounded-2xl text-xs font-semibold backdrop-blur-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 shadow-lg shadow-rose-950/50 alert-animated';
+                alertIconContainer.className = 'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-inner';
+                alertIcon.className = 'fas fa-triangle-exclamation text-sm';
+                alertTitle.textContent = 'Acceso denegado';
+                alertTitle.className = 'text-[10px] uppercase tracking-wider font-extrabold text-rose-400/90 mb-0.5';
+            } else {
+                alertBox.className = 'mb-6 p-4 rounded-2xl text-xs font-semibold backdrop-blur-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 shadow-lg shadow-emerald-950/50 alert-animated';
+                alertIconContainer.className = 'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-inner';
+                alertIcon.className = 'fas fa-circle-check text-sm';
+                alertTitle.textContent = 'Autenticación correcta';
+                alertTitle.className = 'text-[10px] uppercase tracking-wider font-extrabold text-emerald-400/90 mb-0.5';
+            }
+
+            alertMsg.textContent = message;
+        }
+
+        // 5. AUTENTICACIÓN CONTRA usuarios.json
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const userInput = document.getElementById('usuario').value.trim();
+            const passInput = document.getElementById('clave').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+
+            btnText.textContent = 'Autenticando...';
+            btnIcon.className = 'fas fa-circle-notch fa-spin text-xs';
+            submitBtn.disabled = true;
+
+            try {
+                let response = await fetch('../usuarios.json');
+                let usuarios = [];
+
+                if (response.ok) {
+                    usuarios = await response.json();
+                } else {
+                    response = await fetch('usuarios.json');
+                    if (response.ok) {
+                        usuarios = await response.json();
+                    }
+                }
+
+                const match = usuarios.find(u => u.usuario === userInput && u.clave === passInput);
+
+                setTimeout(() => {
+                    if (match) {
+                        showAlert('Credenciales verificadas. Redirigiendo...', 'success');
+                        
+                        localStorage.setItem('waitcars_session', JSON.stringify({
+                            usuario: match.usuario,
+                            nombre: match.nombre || match.usuario,
+                            token: 'wc_' + Math.random().toString(36).substring(2),
+                            timestamp: new Date().getTime()
+                        }));
+
+                        setTimeout(() => {
+                            window.location.href = '../dashboard.html';
+                        }, 800);
+                    } else {
+                        showAlert('Usuario o contraseña incorrectos.', 'error');
+                        resetButton();
+                    }
+                }, 500);
+
+            } catch (error) {
+                setTimeout(() => {
+                    showAlert('Usuario o contraseña incorrectos.', 'error');
+                    resetButton();
+                }, 500);
+            }
+        }
+
+        function resetButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            
+            btnText.textContent = 'Ingresar al Sistema';
+            btnIcon.className = 'fas fa-arrow-right text-xs';
+            submitBtn.disabled = false;
+        }
+
+        loadWhatsAppConfig();
+    </script>
+</body>
+</html>
