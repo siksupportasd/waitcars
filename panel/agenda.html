@@ -170,11 +170,21 @@
             loadAgendaTurnos();
         });
 
+        // FUNCIONES DE DATOS UNIFICADAS CON DASHBOARD
         function getTurnosData() {
-            return JSON.parse(localStorage.getItem('wc_turnos') || '[]');
+            const turnosStandard = JSON.parse(localStorage.getItem('turnos') || '[]');
+            const turnosWc = JSON.parse(localStorage.getItem('wc_turnos') || '[]');
+            
+            const map = new Map();
+            [...turnosStandard, ...turnosWc].forEach(t => {
+                if (!t.id) t.id = 't_' + Math.random().toString(36).substr(2, 9);
+                map.set(t.id, t);
+            });
+            return Array.from(map.values());
         }
 
         function saveTurnosData(turnos) {
+            localStorage.setItem('turnos', JSON.stringify(turnos));
             localStorage.setItem('wc_turnos', JSON.stringify(turnos));
         }
 
@@ -190,7 +200,10 @@
             container.innerHTML = '';
 
             // Filtrar turnos de la fecha seleccionada
-            const dayTurnos = turnos.filter(t => t.fecha === selectedDate);
+            const dayTurnos = turnos.filter(t => {
+                if (!t.fecha) return false;
+                return t.fecha.substring(0, 10) === selectedDate;
+            });
 
             // Ordenar por hora (ej. "10:30")
             dayTurnos.sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
@@ -199,7 +212,8 @@
                 container.innerHTML = `
                     <div class="text-center py-16 glass-card rounded-2xl border border-slate-800">
                         <i class="fas fa-calendar-xmark text-4xl text-slate-600 mb-3"></i>
-                        <p class="text-xs text-slate-400 font-medium">No hay turnos agendados para esta fecha.</p>
+                        <p class="text-xs text-slate-400 font-medium">No hay turnos agendados para la fecha: <span class="text-white font-bold">${selectedDate}</span>.</p>
+                        <p class="text-[11px] text-slate-500 mt-1">Prueba seleccionando la fecha en la que creaste los turnos en el Dashboard.</p>
                     </div>
                 `;
                 return;
@@ -214,7 +228,6 @@
                 const card = document.createElement('div');
                 card.className = `glass-card p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${isPaid ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800'}`;
 
-                // Opciones del selector de pago
                 let paymentOptionsHtml = '';
                 paymentMethods.forEach(pm => {
                     const selected = currentMethod === pm.id ? 'selected' : '';
@@ -229,10 +242,10 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <h3 class="text-sm font-black text-white">${turno.cliente || 'Cliente sin nombre'}</h3>
+                                <h3 class="text-sm font-black text-white">${turno.cliente || turno.nombre || 'Cliente sin nombre'}</h3>
                                 ${isPaid ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pagado</span>' : '<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500/20 text-amber-400 border border-amber-500/30">Pendiente de Pago</span>'}
                             </div>
-                            <p class="text-xs text-slate-300 mt-0.5 font-medium"><i class="fas fa-car text-[10px] text-brand-accent mr-1"></i> ${turno.vehiculo || 'Vehículo general'}</p>
+                            <p class="text-xs text-slate-300 mt-0.5 font-medium"><i class="fas fa-car text-[10px] text-brand-accent mr-1"></i> ${turno.vehiculo || turno.modelo || 'Vehículo general'}</p>
                             <p class="text-[10px] text-slate-400 mt-0.5 font-mono">DNI: ${turno.dni || 'N/A'} | Monto: <span class="text-emerald-400 font-bold">$${(turno.monto || 0).toFixed(2)}</span></p>
                         </div>
                     </div>
