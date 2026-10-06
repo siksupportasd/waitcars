@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950">
+<html lang="es" class="h-full bg-slate-950 select-none">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SE EVITA CUALQUIER TIPO DE ZOOM EN MÓVILES -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Waitcars - Panel Principal</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,9 +33,19 @@
     </script>
 
     <style>
-        body {
+        /* PREVENIR ZOOM Y SCROLL INDECEADO EN DISPOSITIVOS MÓVILES */
+        html, body {
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+            overscroll-behavior-y: none;
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #020712;
+        }
+
+        /* Evita que Safari/Chrome hagan zoom al tocar inputs */
+        input, select, textarea, button {
+            font-size: 16px !important;
+            touch-action: manipulation;
         }
 
         .bg-grid-pattern {
@@ -59,16 +70,17 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
-        /* HEADER FIJO (STICKY) */
+        /* CABECERA SUPERIOR FIJA */
         .glass-header {
-            background: rgba(2, 7, 18, 0.88);
+            background: rgba(2, 7, 18, 0.92);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* MENÚ FLOTANTE INFERIOR */
         .glass-nav {
-            background: rgba(7, 22, 44, 0.8);
+            background: rgba(7, 22, 44, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -86,23 +98,23 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#020712] text-slate-100 antialiased relative overflow-x-hidden pb-28 bg-grid-pattern">
+<body class="min-h-screen bg-[#020712] text-slate-100 antialiased relative overflow-x-hidden pb-24 bg-grid-pattern">
 
     <!-- Destellos Ambientales -->
     <div class="glow-orb w-[400px] h-[400px] bg-brand-primary -top-20 -left-20 z-0"></div>
     <div class="glow-orb w-[450px] h-[450px] bg-brand-dark bottom-0 right-0 z-0"></div>
 
-    <!-- CABECERA SUPERIOR FIJA (CABECERA QUE NO SE MUEVE AL HACER SCROLL) -->
-    <header class="sticky top-0 z-30 glass-header px-4 sm:px-8 py-3.5 shadow-lg">
+    <!-- CABECERA SUPERIOR FIJA QUE NO SE MUEVE -->
+    <header class="sticky top-0 z-30 glass-header px-4 sm:px-8 py-3 shadow-lg">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             
-            <!-- Saludo al usuario -->
+            <!-- Saludo al usuario con el nombre ajustado -->
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-brand-primary/20 border border-brand-primary/30 flex items-center justify-center text-brand-primary font-black text-sm shadow-inner">
-                    <i class="fas fa-user-gear"></i>
+                <div class="w-9 h-9 rounded-xl bg-brand-primary/20 border border-brand-primary/30 flex items-center justify-center text-brand-primary font-black text-sm shadow-inner shrink-0">
+                    <i class="fas fa-car-wash"></i>
                 </div>
                 <div>
-                    <span class="text-[9px] font-extrabold uppercase tracking-widest text-brand-primary block leading-none">Waitcars System</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-brand-primary block leading-none">Waitcars System</span>
                     <h1 class="text-sm sm:text-base font-extrabold text-white mt-0.5 leading-tight flex items-center gap-1.5">
                         ¡Hola, <span id="user-display-name" class="text-brand-primary">Usuario</span>! 👋
                     </h1>
@@ -144,7 +156,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-slate-200">Sesión Iniciada</p>
-                                <p class="text-[10px] text-slate-400 leading-tight">Bienvenido al panel general de Waitcars.</p>
+                                <p class="text-[10px] text-slate-400 leading-tight">Bienvenido a Waitcars System.</p>
                                 <span class="text-[9px] text-slate-500 block mt-0.5">Ahora</span>
                             </div>
                         </div>
@@ -154,8 +166,8 @@
                                 <i class="fas fa-calendar-check text-[10px]"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-slate-200">Sistema Listo</p>
-                                <p class="text-[10px] text-slate-400 leading-tight">Puedes agendar turnos o auditar clientes.</p>
+                                <p class="text-xs font-bold text-slate-200">Sistema Operativo</p>
+                                <p class="text-[10px] text-slate-400 leading-tight">Puedes agendar turnos y gestionar clientes.</p>
                                 <span class="text-[9px] text-slate-500 block mt-0.5">Hace 5 min</span>
                             </div>
                         </div>
@@ -166,19 +178,19 @@
         </div>
     </header>
 
-    <!-- CONTENIDO CONTENEDOR PRINCIPAL -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5">
+    <!-- CONTENEDOR PRINCIPAL QUE ADAPTA SU TAMAÑO A TODA LA PANTALLA -->
+    <div class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3">
 
         <main id="main-content">
             
             <!-- VISTA INICIO -->
-            <div id="view-inicio" class="space-y-5">
+            <div id="view-inicio" class="space-y-4">
                 
-                <!-- CARDS DE RESUMEN EJECUTIVO (COMPACTAS) -->
+                <!-- CARDS COMPACTAS -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     
-                    <!-- Card 1: Generado Hoy -->
-                    <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden flex items-center justify-between">
+                    <!-- Generado Hoy -->
+                    <div class="glass-card p-3 rounded-2xl relative overflow-hidden flex items-center justify-between">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">Generado Hoy</span>
                             <p class="text-xl font-black text-white">$<span id="stat-generado-hoy">0.00</span></p>
@@ -191,13 +203,13 @@
                         </div>
                     </div>
 
-                    <!-- Card 2: Clientes Atendidos -->
-                    <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden flex items-center justify-between">
+                    <!-- Clientes Registrados -->
+                    <div class="glass-card p-3 rounded-2xl relative overflow-hidden flex items-center justify-between">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">Clientes Registrados</span>
                             <p class="text-xl font-black text-white"><span id="stat-clientes-total">0</span> <span class="text-xs font-semibold text-slate-400">Total</span></p>
                             <span class="text-[9px] text-brand-primary font-bold flex items-center gap-1 mt-0.5">
-                                <i class="fas fa-users text-[8px]"></i> Base de datos activa
+                                <i class="fas fa-users text-[8px]"></i> Base activa
                             </span>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-brand-primary/15 border border-brand-primary/30 text-brand-primary flex items-center justify-center text-sm shrink-0">
@@ -205,8 +217,8 @@
                         </div>
                     </div>
 
-                    <!-- Card 3: Gastos de Hoy -->
-                    <div class="glass-card p-3.5 rounded-2xl relative overflow-hidden flex items-center justify-between">
+                    <!-- Gastos de Hoy -->
+                    <div class="glass-card p-3 rounded-2xl relative overflow-hidden flex items-center justify-between">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">Gastos de Hoy</span>
                             <p class="text-xl font-black text-white">$<span id="stat-gastos-hoy">0.00</span></p>
@@ -221,15 +233,15 @@
 
                 </div>
 
-                <!-- ACCIONES RÁPIDAS (BOTONES PROFESIONALES CON DESCRIPCIÓN) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- ACCIONES RÁPIDAS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     
-                    <!-- Botón 1: Agendar un Turno -->
+                    <!-- Agendar un Turno -->
                     <button 
                         onclick="openModal('modal-turno')" 
-                        class="p-5 rounded-2xl glass-card border border-brand-primary/30 hover:border-brand-primary transition-all duration-200 text-left group relative overflow-hidden flex items-start gap-4"
+                        class="p-4 rounded-2xl glass-card border border-brand-primary/30 hover:border-brand-primary transition-all duration-200 text-left group relative overflow-hidden flex items-start gap-3.5"
                     >
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary/20 to-brand-dark/40 border border-brand-primary/40 text-brand-primary flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform shadow-md">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-primary/20 to-brand-dark/40 border border-brand-primary/40 text-brand-primary flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform shadow-md">
                             <i class="fas fa-calendar-plus"></i>
                         </div>
                         <div class="min-w-0 flex-1">
@@ -239,19 +251,19 @@
                                 </span>
                                 <i class="fas fa-chevron-right text-xs text-slate-500 group-hover:text-brand-primary transition-colors"></i>
                             </div>
-                            <h3 class="text-base font-extrabold text-white mt-1 group-hover:text-brand-primary transition-colors">Agendar un Turno</h3>
-                            <p class="text-xs text-slate-400 mt-1 leading-snug">
+                            <h3 class="text-sm font-extrabold text-white mt-1 group-hover:text-brand-primary transition-colors">Agendar un Turno</h3>
+                            <p class="text-[11px] text-slate-400 mt-0.5 leading-snug">
                                 Reserva horario, busca cliente por DNI, asigna auto y tipo de servicio.
                             </p>
                         </div>
                     </button>
 
-                    <!-- Botón 2: Registrar un Gasto -->
+                    <!-- Registrar un Gasto -->
                     <button 
                         onclick="openModal('modal-gasto')" 
-                        class="p-5 rounded-2xl glass-card border border-rose-500/30 hover:border-rose-500 transition-all duration-200 text-left group relative overflow-hidden flex items-start gap-4"
+                        class="p-4 rounded-2xl glass-card border border-rose-500/30 hover:border-rose-500 transition-all duration-200 text-left group relative overflow-hidden flex items-start gap-3.5"
                     >
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-rose-950/40 border border-rose-500/40 text-rose-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform shadow-md">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-rose-500/20 to-rose-950/40 border border-rose-500/40 text-rose-400 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform shadow-md">
                             <i class="fas fa-file-invoice-dollar"></i>
                         </div>
                         <div class="min-w-0 flex-1">
@@ -261,8 +273,8 @@
                                 </span>
                                 <i class="fas fa-chevron-right text-xs text-slate-500 group-hover:text-rose-400 transition-colors"></i>
                             </div>
-                            <h3 class="text-base font-extrabold text-white mt-1 group-hover:text-rose-400 transition-colors">Registrar un Gasto</h3>
-                            <p class="text-xs text-slate-400 mt-1 leading-snug">
+                            <h3 class="text-sm font-extrabold text-white mt-1 group-hover:text-rose-400 transition-colors">Registrar un Gasto</h3>
+                            <p class="text-[11px] text-slate-400 mt-0.5 leading-snug">
                                 Asigna salidas de dinero, productos de limpieza o insumos de tu negocio.
                             </p>
                         </div>
@@ -272,8 +284,8 @@
 
             </div>
 
-            <!-- CONTENEDOR IFRAME PARA VISTAS ADJUNTAS (Agenda, Clientes, Historial, Admin) -->
-            <div id="view-iframe-container" class="hidden w-full h-[82vh] rounded-2xl overflow-hidden glass-card border border-slate-800">
+            <!-- VISTAS SECUNDARIAS A PANTALLA COMPLETA COMPLETA (Agenda, Clientes, Historial, Admin) -->
+            <div id="view-iframe-container" class="hidden w-full h-[calc(100vh-140px)] rounded-2xl overflow-hidden glass-card border border-slate-800">
                 <iframe id="content-frame" class="w-full h-full border-0"></iframe>
             </div>
 
@@ -281,11 +293,10 @@
 
     </div>
 
-    <!-- MENÚ FLOTANTE NAVEGABLE (ABAJO) -->
+    <!-- MENÚ FLOTANTE INFERIOR -->
     <div class="fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3">
         <nav class="glass-nav rounded-2xl p-1.5 flex items-center justify-around">
             
-            <!-- Inicio -->
             <button 
                 onclick="navTo('inicio')" 
                 id="nav-inicio" 
@@ -295,7 +306,6 @@
                 <span class="text-[9px] font-extrabold tracking-wider">Inicio</span>
             </button>
 
-            <!-- Agenda -->
             <button 
                 onclick="navTo('agenda')" 
                 id="nav-agenda" 
@@ -305,7 +315,6 @@
                 <span class="text-[9px] font-extrabold tracking-wider">Agenda</span>
             </button>
 
-            <!-- Clientes (NUEVO) -->
             <button 
                 onclick="navTo('clientes')" 
                 id="nav-clientes" 
@@ -315,7 +324,6 @@
                 <span class="text-[9px] font-extrabold tracking-wider">Clientes</span>
             </button>
 
-            <!-- Historial -->
             <button 
                 onclick="navTo('historial')" 
                 id="nav-historial" 
@@ -325,7 +333,6 @@
                 <span class="text-[9px] font-extrabold tracking-wider">Historial</span>
             </button>
 
-            <!-- Admin -->
             <button 
                 onclick="navTo('admin')" 
                 id="nav-admin" 
@@ -339,20 +346,18 @@
     </div>
 
 
-    <!-- MODAL 1: AGENDAR UN TURNO (INTEGRADO CON DNI Y CLIENTES) -->
+    <!-- MODAL 1: AGENDAR UN TURNO -->
     <div id="modal-turno" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
-        <div class="glass-card w-full max-w-md rounded-3xl p-6 relative border border-slate-700 shadow-2xl">
-            <button onclick="closeModal('modal-turno')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-base">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl">
+            <button onclick="closeModal('modal-turno')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
                 <i class="fas fa-xmark"></i>
             </button>
             
-            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-3">
                 <i class="fas fa-calendar-plus text-brand-primary"></i> Agendar Nuevo Turno
             </h3>
 
-            <form onsubmit="saveTurno(event)" class="space-y-3.5">
-                
-                <!-- BUSCADOR POR DNI -->
+            <form onsubmit="saveTurno(event)" class="space-y-3">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">DNI del Cliente</label>
                     <div class="relative">
@@ -361,43 +366,42 @@
                             id="turno-dni" 
                             required 
                             onkeyup="searchClientByDNI()"
-                            placeholder="Ingrese DNI sin puntos" 
-                            class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 pl-3 pr-9 text-xs text-white focus:outline-none focus:border-brand-primary font-mono"
+                            placeholder="Sin puntos ni espacios" 
+                            class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 pl-3 pr-9 text-xs text-white focus:outline-none focus:border-brand-primary font-mono"
                         >
-                        <i class="fas fa-magnifying-glass absolute right-3 top-3 text-slate-500 text-xs"></i>
+                        <i class="fas fa-magnifying-glass absolute right-3 top-2.5 text-slate-500 text-xs"></i>
                     </div>
-                    <p id="dni-status" class="text-[10px] mt-1 font-semibold text-slate-500">Escriba el DNI para verificar cliente en base de datos.</p>
+                    <p id="dni-status" class="text-[10px] mt-1 font-semibold text-slate-500">Ingresa el DNI para autocompletar cliente.</p>
                 </div>
 
-                <!-- DATOS DEL CLIENTE (SE AUTOCOMPLETAN SI EXISTE) -->
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nombre y Apellido</label>
-                    <input type="text" id="turno-cliente" required placeholder="Nombre del cliente" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    <input type="text" id="turno-cliente" required placeholder="Nombre completo" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2.5">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vehículo / Auto</label>
-                        <input type="text" id="turno-vehiculo" required placeholder="Ej: VW Gol" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                        <input type="text" id="turno-vehiculo" required placeholder="Ej: VW Gol" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">WhatsApp</label>
-                        <input type="text" id="turno-wsp" placeholder="Ej: 54911..." class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                        <input type="text" id="turno-wsp" placeholder="Ej: 54911..." class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2.5">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Monto ($)</label>
-                        <input type="number" id="turno-monto" required min="0" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                        <input type="number" id="turno-monto" required min="0" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hora Programada</label>
-                        <input type="time" id="turno-hora" required class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                        <input type="time" id="turno-hora" required class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-3 rounded-xl bg-brand-primary text-white font-bold text-xs uppercase tracking-wider hover:bg-brand-primary/90 transition-all mt-2 shadow-lg shadow-brand-primary/20">
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-brand-primary text-white font-bold text-xs uppercase tracking-wider hover:bg-brand-primary/90 transition-all mt-1 shadow-lg shadow-brand-primary/20">
                     Confirmar y Agendar
                 </button>
             </form>
@@ -406,26 +410,26 @@
 
     <!-- MODAL 2: REGISTRAR UN GASTO -->
     <div id="modal-gasto" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
-        <div class="glass-card w-full max-w-md rounded-3xl p-6 relative border border-slate-700 shadow-2xl">
-            <button onclick="closeModal('modal-gasto')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-base">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl">
+            <button onclick="closeModal('modal-gasto')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
                 <i class="fas fa-xmark"></i>
             </button>
             
-            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-3">
                 <i class="fas fa-wallet text-rose-400"></i> Registrar Salida / Gasto
             </h3>
 
-            <form onsubmit="saveGasto(event)" class="space-y-4">
+            <form onsubmit="saveGasto(event)" class="space-y-3">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Concepto / Detalle</label>
-                    <input type="text" id="gasto-concepto" required placeholder="Ej: Jabón de lavado, cera, microfibra" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-rose-500">
+                    <input type="text" id="gasto-concepto" required placeholder="Ej: Jabón, cera, paños microfibra" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-rose-500">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Monto ($)</label>
-                    <input type="number" id="gasto-monto" required min="0" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-rose-500">
+                    <input type="number" id="gasto-monto" required min="0" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-rose-500">
                 </div>
 
-                <button type="submit" class="w-full py-3 rounded-xl bg-rose-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-rose-500 transition-all mt-2 shadow-lg shadow-rose-600/20">
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-rose-500 transition-all mt-1 shadow-lg shadow-rose-600/20">
                     Registrar Gasto
                 </button>
             </form>
@@ -448,7 +452,6 @@
             loadDashboardStats();
         });
 
-        // DESPLEGABLE NOTIFICACIONES
         function toggleNotifications() {
             document.getElementById('notif-dropdown').classList.toggle('hidden');
         }
@@ -463,7 +466,7 @@
             if (badge) badge.classList.add('hidden');
         }
 
-        // NAVEGACIÓN ENTRE VISTAS
+        // CAMBIO DE VISTAS A PANTALLA COMPLETA
         function navTo(section) {
             const viewInicio = document.getElementById('view-inicio');
             const viewIframeContainer = document.getElementById('view-iframe-container');
@@ -493,7 +496,6 @@
             }
         }
 
-        // MODALES
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
         }
@@ -502,14 +504,13 @@
             document.getElementById(id).classList.add('hidden');
         }
 
-        // BUSCADOR AUTOMÁTICO DE CLIENTES POR DNI EN EL MODAL
         function searchClientByDNI() {
             const dniVal = document.getElementById('turno-dni').value.trim();
             const statusLabel = document.getElementById('dni-status');
             const clientes = JSON.parse(localStorage.getItem('wc_clientes') || '[]');
 
             if (!dniVal) {
-                statusLabel.textContent = "Escriba el DNI para verificar cliente en base de datos.";
+                statusLabel.textContent = "Ingresa el DNI para autocompletar cliente.";
                 statusLabel.className = "text-[10px] mt-1 font-semibold text-slate-500";
                 return;
             }
@@ -521,13 +522,12 @@
                 document.getElementById('turno-vehiculo').value = found.vehiculo || '';
                 document.getElementById('turno-wsp').value = found.wsp || '';
 
-                statusLabel.innerHTML = `<span class="text-emerald-400"><i class="fas fa-check-circle"></i> Cliente registrado encontrado (${found.lavados || 0} lavados previo)</span>`;
+                statusLabel.innerHTML = `<span class="text-emerald-400"><i class="fas fa-check-circle"></i> Cliente encontrado (${found.lavados || 0} lavados previos)</span>`;
             } else {
-                statusLabel.innerHTML = `<span class="text-amber-400"><i class="fas fa-info-circle"></i> Cliente no registrado. Se creará automáticamente al agendar.</span>`;
+                statusLabel.innerHTML = `<span class="text-amber-400"><i class="fas fa-info-circle"></i> Cliente no registrado. Se creará al agendar.</span>`;
             }
         }
 
-        // GUARDAR TURNO E INCREMENTAR HISTORIAL DE CLIENTES
         function saveTurno(event) {
             event.preventDefault();
 
@@ -538,12 +538,10 @@
             const monto = parseFloat(document.getElementById('turno-monto').value) || 0;
             const hora = document.getElementById('turno-hora').value;
 
-            // 1. Guardar el Turno
             let turnos = JSON.parse(localStorage.getItem('wc_turnos') || '[]');
             turnos.push({ dni, cliente, vehiculo, wsp, monto, hora, fecha: new Date().toISOString() });
             localStorage.setItem('wc_turnos', JSON.stringify(turnos));
 
-            // 2. Registrar/Actualizar el Cliente en clientes.html
             let clientes = JSON.parse(localStorage.getItem('wc_clientes') || '[]');
             let clientIdx = clientes.findIndex(c => c.dni === dni);
 
@@ -565,12 +563,11 @@
 
             closeModal('modal-turno');
             event.target.reset();
-            document.getElementById('dni-status').textContent = "Escriba el DNI para verificar cliente en base de datos.";
+            document.getElementById('dni-status').textContent = "Ingresa el DNI para autocompletar cliente.";
             loadDashboardStats();
-            addSystemNotification('Turno Registrado', `${cliente} (${vehiculo}) agendado a las ${hora}.`);
+            addSystemNotification('Turno Agendado', `${cliente} (${vehiculo}) - ${hora}`);
         }
 
-        // GUARDAR GASTO
         function saveGasto(event) {
             event.preventDefault();
             const concepto = document.getElementById('gasto-concepto').value;
@@ -586,7 +583,6 @@
             addSystemNotification('Gasto Registrado', `${concepto} - $${monto}`);
         }
 
-        // CARGA DE MÉTRICAS
         function loadDashboardStats() {
             const turnos = JSON.parse(localStorage.getItem('wc_turnos') || '[]');
             const gastos = JSON.parse(localStorage.getItem('wc_gastos') || '[]');
@@ -600,7 +596,6 @@
             document.getElementById('stat-gastos-hoy').textContent = totalGastos.toFixed(2);
         }
 
-        // NOTIFICACIONES DINÁMICAS
         function addSystemNotification(titulo, mensaje) {
             const list = document.getElementById('notif-list');
             const item = document.createElement('div');
