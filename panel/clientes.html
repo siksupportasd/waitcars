@@ -122,7 +122,7 @@
                 <i class="fas fa-search absolute left-3 top-2.5 text-slate-500 text-xs"></i>
             </div>
 
-            <!-- DROPDOWN EMERGENTE CORREGIDO (Z-INDEX ALTO) -->
+            <!-- DROPDOWN EMERGENTE DE ORDENAMIENTO -->
             <div class="relative w-full md:w-auto flex justify-end">
                 <button 
                     id="sort-dropdown-btn"
@@ -136,7 +136,7 @@
                     <i class="fas fa-chevron-down text-[10px] text-slate-500 transition-transform" id="sort-chevron"></i>
                 </button>
 
-                <!-- Menú Desplegable Emergente por encima del contenido (z-[60]) -->
+                <!-- Menú Desplegable Emergente -->
                 <div 
                     id="sort-dropdown-menu" 
                     class="hidden absolute right-0 top-11 w-64 glass-card border border-slate-700 rounded-2xl p-1.5 shadow-2xl z-[60] space-y-1 bg-slate-900/95"
@@ -225,7 +225,7 @@
 
     </div>
 
-    <!-- TARJETAS DE CLIENTES CON Z-INDEX MENOR PARA PERMITIR DESPLEGABLE ARRIBA -->
+    <!-- TARJETAS DE CLIENTES -->
     <div id="clients-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto relative z-10">
         <!-- Generado dinámicamente -->
     </div>
@@ -298,7 +298,7 @@
     </div>
 
 
-    <!-- MODAL: ENVIAR MENSAJE DE FIDELIZACIÓN POR WHATSAPP -->
+    <!-- MODAL: ENVIAR MENSAJE DE FIDELIZACIÓN POR WHATSAPP Y GESTOR DE PLANTILLAS -->
     <div id="modal-wsp-promo" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
         <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl bg-slate-900/90">
             <button onclick="closeModal('modal-wsp-promo')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
@@ -308,20 +308,43 @@
             <h3 class="text-base font-extrabold text-white flex items-center gap-2 mb-1">
                 <i class="fab fa-whatsapp text-emerald-400 text-lg"></i> Aviso de Fidelización
             </h3>
-            <p id="wsp-modal-subtitle" class="text-xs text-slate-400 mb-3">Selecciona la plantilla de mensaje para el cliente.</p>
+            <p id="wsp-modal-subtitle" class="text-xs text-slate-400 mb-3">Selecciona o crea una plantilla de mensaje.</p>
 
             <div class="space-y-3">
+                <!-- Selector de Plantillas y Botón para Agregar -->
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Plantilla de Mensaje</label>
-                    <select id="wsp-template-select" onchange="updateWspPreview()" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        <option value="friendly">1. Recordatorio Amigable (Invitar a agendar)</option>
-                        <option value="promo">2. Oferta / Descuento Especial</option>
-                        <option value="maintenance">3. Recomendación de Cuidado del Vehículo</option>
-                    </select>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Plantilla de Mensaje</label>
+                        <button onclick="toggleNewTemplateForm()" class="text-[10px] font-bold text-brand-primary hover:underline flex items-center gap-1">
+                            <i class="fas fa-plus"></i> Nueva Plantilla
+                        </button>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <select id="wsp-template-select" onchange="updateWspPreview()" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            <!-- Opciones cargadas dinámicamente -->
+                        </select>
+                        <button id="delete-template-btn" onclick="deleteCurrentTemplate()" class="px-2.5 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all hidden" title="Eliminar plantilla seleccionada">
+                            <i class="fas fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
                 </div>
 
+                <!-- Formulario Plegable para Crear Nueva Plantilla -->
+                <div id="new-template-form" class="hidden p-3 bg-slate-950/80 border border-slate-800 rounded-2xl space-y-2.5">
+                    <span class="text-[10px] font-black uppercase text-brand-primary tracking-wider block">Crear Nueva Plantilla</span>
+                    <input type="text" id="new-template-title" placeholder="Título (ej: Descuento Lluvia)" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-1.5 px-3 text-xs text-white focus:outline-none focus:border-brand-primary">
+                    <textarea id="new-template-body" rows="3" placeholder="Mensaje... Usa {nombre} y {vehiculo} para personalizar automáticamente." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-brand-primary resize-none"></textarea>
+                    
+                    <div class="flex justify-end gap-2 pt-1">
+                        <button onclick="toggleNewTemplateForm()" class="px-3 py-1 rounded-lg bg-slate-800 text-slate-400 text-[10px] font-bold">Cancelar</button>
+                        <button onclick="saveNewTemplate()" class="px-3 py-1 rounded-lg bg-brand-primary text-white text-[10px] font-bold">Guardar Plantilla</button>
+                    </div>
+                </div>
+
+                <!-- Vista Previa / Editor del Texto Actual -->
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vista Previa del Texto</label>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vista Previa / Ajuste del Texto</label>
                     <textarea id="wsp-preview-text" rows="4" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-sans leading-relaxed resize-none"></textarea>
                 </div>
 
@@ -339,7 +362,29 @@
         let currentInactivityFilter = 'all';
         let currentTargetClient = null;
 
-        // VERIFICACIÓN DE SESIÓN PRIVADA
+        // PLANTILLAS PREDETERMINADAS DE FÁBRICA
+        const DEFAULT_TEMPLATES = [
+            {
+                id: 'friendly',
+                title: '1. Recordatorio Amigable (Invitar a agendar)',
+                text: 'Hola {nombre}! 👋 Te saludamos de Waitcars. Notamos que hace unos días no traes tu {vehiculo}. Querías saber si deseas agendar un turno para dejarlo impecable esta semana? 🚗✨',
+                isDefault: true
+            },
+            {
+                id: 'promo',
+                title: '2. Oferta / Descuento Especial',
+                text: 'Hola {nombre}! 🎁 En Waitcars tenemos una atención especial para tu {vehiculo}. Agendando tu turno hoy te reservamos el mejor horario disponible. Te gustaría aprovecharlo? 📲',
+                isDefault: true
+            },
+            {
+                id: 'maintenance',
+                title: '3. Cuidado del Vehículo',
+                text: 'Hola {nombre}! 🚿 Recordá que para mantener la pintura y brillo de tu {vehiculo} se recomienda un lavado periódico. Avísanos y te guardamos un lugar en nuestra agenda!',
+                isDefault: true
+            }
+        ];
+
+        // VERIFICACIÓN DE SESIÓN PRIVADA Y CARGA
         document.addEventListener('DOMContentLoaded', () => {
             const sessionData = localStorage.getItem('waitcars_session');
             if (!sessionData) {
@@ -366,6 +411,11 @@
 
         function getTurnosData() {
             return JSON.parse(localStorage.getItem('wc_turnos') || '[]');
+        }
+
+        function getTemplatesData() {
+            const custom = JSON.parse(localStorage.getItem('wc_wsp_templates') || '[]');
+            return [...DEFAULT_TEMPLATES, ...custom];
         }
 
         function loadClientModule() {
@@ -628,31 +678,106 @@
             openModal('modal-timeline');
         }
 
+        /* --- MÓDULO DE WHATSAPP Y PLANTILLAS PERSONALIZADAS --- */
+
         function openWspModal(dni) {
             const clientes = getClientsData();
             currentTargetClient = clientes.find(c => c.dni === dni);
             if (!currentTargetClient) return;
 
             document.getElementById('wsp-modal-subtitle').textContent = `Destinatario: ${currentTargetClient.nombre} (${currentTargetClient.vehiculo})`;
-            document.getElementById('wsp-template-select').value = 'friendly';
+            document.getElementById('new-template-form').classList.add('hidden');
             
+            renderTemplateSelectOptions();
             updateWspPreview();
             openModal('modal-wsp-promo');
+        }
+
+        function renderTemplateSelectOptions(selectIdToKeep = null) {
+            const select = document.getElementById('wsp-template-select');
+            const templates = getTemplatesData();
+            
+            select.innerHTML = '';
+            templates.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = t.title;
+                select.appendChild(opt);
+            });
+
+            if (selectIdToKeep) {
+                select.value = selectIdToKeep;
+            }
         }
 
         function updateWspPreview() {
             if (!currentTargetClient) return;
 
-            const templateType = document.getElementById('wsp-template-select').value;
-            const textarea = document.getElementById('wsp-preview-text');
+            const selectedId = document.getElementById('wsp-template-select').value;
+            const templates = getTemplatesData();
+            const selectedTemplate = templates.find(t => t.id === selectedId);
 
-            if (templateType === 'friendly') {
-                textarea.value = `Hola ${currentTargetClient.nombre}! 👋 Te saludamos de Waitcars. Notamos que hace unos días no traes tu ${currentTargetClient.vehiculo}. Querías saber si deseas agendar un turno para dejarlo impecable esta semana? 🚗✨`;
-            } else if (templateType === 'promo') {
-                textarea.value = `Hola ${currentTargetClient.nombre}! 🎁 En Waitcars tenemos una atención especial para tu ${currentTargetClient.vehiculo}. Agendando tu turno hoy te reservamos el mejor horario disponible. Te gustaría aprovecharlo? 📲`;
-            } else if (templateType === 'maintenance') {
-                textarea.value = `Hola ${currentTargetClient.nombre}! 🚿 Recordá que para mantener la pintura y brillo de tu ${currentTargetClient.vehiculo} se recomienda un lavado periódico. Avísanos y te guardamos un lugar en nuestra agenda!`;
+            const deleteBtn = document.getElementById('delete-template-btn');
+            if (selectedTemplate && !selectedTemplate.isDefault) {
+                deleteBtn.classList.remove('hidden');
+            } else {
+                deleteBtn.classList.add('hidden');
             }
+
+            if (selectedTemplate) {
+                let text = selectedTemplate.text;
+                text = text.replace(/\{nombre\}/g, currentTargetClient.nombre || 'Cliente');
+                text = text.replace(/\{vehiculo\}/g, currentTargetClient.vehiculo || 'vehículo');
+                document.getElementById('wsp-preview-text').value = text;
+            }
+        }
+
+        function toggleNewTemplateForm() {
+            const form = document.getElementById('new-template-form');
+            form.classList.toggle('hidden');
+            if (!form.classList.contains('hidden')) {
+                document.getElementById('new-template-title').value = '';
+                document.getElementById('new-template-body').value = '';
+            }
+        }
+
+        function saveNewTemplate() {
+            const title = document.getElementById('new-template-title').value.trim();
+            const text = document.getElementById('new-template-body').value.trim();
+
+            if (!title || !text) {
+                alert('Por favor, completa el título y el contenido de la plantilla.');
+                return;
+            }
+
+            const newId = 'custom_' + Date.now();
+            const customTemplates = JSON.parse(localStorage.getItem('wc_wsp_templates') || '[]');
+
+            customTemplates.push({
+                id: newId,
+                title: title,
+                text: text,
+                isDefault: false
+            });
+
+            localStorage.setItem('wc_wsp_templates', JSON.stringify(customTemplates));
+
+            toggleNewTemplateForm();
+            renderTemplateSelectOptions(newId);
+            updateWspPreview();
+        }
+
+        function deleteCurrentTemplate() {
+            const selectedId = document.getElementById('wsp-template-select').value;
+            let customTemplates = JSON.parse(localStorage.getItem('wc_wsp_templates') || '[]');
+
+            if (!confirm('¿Deseas eliminar esta plantilla personalizada?')) return;
+
+            customTemplates = customTemplates.filter(t => t.id !== selectedId);
+            localStorage.setItem('wc_wsp_templates', JSON.stringify(customTemplates));
+
+            renderTemplateSelectOptions();
+            updateWspPreview();
         }
 
         function sendWspDirect() {
