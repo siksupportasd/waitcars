@@ -2,14 +2,13 @@
 <html lang="es" class="h-full bg-slate-950 select-none">
 <head>
     <meta charset="UTF-8">
-    <!-- Evitar zoom y scroll descontrolado en móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Waitcars - Gestión Profesional de Clientes</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <script>
@@ -61,7 +60,7 @@
             -webkit-backdrop-filter: blur(10px);
         }
 
-        /* Scrollbar estilizado */
+        /* Scrollbar personalizado */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -72,76 +71,117 @@
             background: rgba(29, 142, 241, 0.35);
             border-radius: 10px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(29, 142, 241, 0.6);
-        }
     </style>
 </head>
 <body class="min-h-screen bg-[#020712] text-slate-100 p-3 sm:p-6 bg-grid-pattern">
 
-    <!-- CABECERA PRINCIPAL DE LA VISTA -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-        <div>
-            <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded-md bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-widest">
-                    Módulo Privado
-                </span>
-            </div>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2.5 mt-1">
-                <i class="fas fa-users-gear text-brand-primary"></i> Directorio de Clientes
-            </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Gestión de cartera, historial de servicios y remarketing automatizado.</p>
-        </div>
+    <!-- CABECERA PRINCIPAL CENTRADA Y MEJORADA -->
+    <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-6 pt-2">
+        <span class="px-3 py-1 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-widest shadow-sm shadow-brand-primary/20 mb-2.5 flex items-center gap-1.5">
+            <i class="fas fa-shield-halved text-xs"></i> Módulo Privado de Gestión
+        </span>
+        
+        <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center justify-center gap-3">
+            <i class="fas fa-users-gear text-brand-primary"></i> Directora de Clientes
+        </h2>
+        
+        <p class="text-xs sm:text-sm text-slate-400 mt-1.5 font-medium max-w-lg leading-relaxed">
+            Administra la cartera activa, analiza la frecuencia de lavado y envía recordatorios automáticos de fidelización.
+        </p>
 
-        <button 
-            onclick="openModal('modal-nuevo-cliente')" 
-            class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-dark text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/20 hover:opacity-95 active:scale-95 transition-all cursor-pointer border border-brand-primary/40"
-        >
-            <i class="fas fa-user-plus text-sm"></i> Registrar Cliente
-        </button>
+        <div class="mt-4">
+            <button 
+                onclick="openModal('modal-nuevo-cliente')" 
+                class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-dark text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/25 hover:opacity-95 active:scale-95 transition-all cursor-pointer border border-brand-primary/40"
+            >
+                <i class="fas fa-user-plus text-sm"></i> Nuevo Cliente
+            </button>
+        </div>
     </div>
 
-    <!-- PANEL DE BÚSQUEDA, FILTROS AVANZADOS Y ORDENAMIENTO -->
-    <div class="glass-card p-4 rounded-2xl mb-6 space-y-3.5">
+    <!-- PANEL DE BÚSQUEDA Y FILTRADO AVANZADO -->
+    <div class="glass-card p-4 rounded-2xl mb-6 space-y-3.5 max-w-6xl mx-auto">
         
-        <div class="flex flex-col lg:flex-row gap-3 items-center justify-between">
+        <div class="flex flex-col md:flex-row gap-3 items-center justify-between">
             
             <!-- Campo de Búsqueda por Texto -->
-            <div class="relative w-full lg:w-80">
+            <div class="relative w-full md:w-80">
                 <input 
                     type="text" 
                     id="search-input" 
                     onkeyup="applyFilters()" 
-                    placeholder="Buscar cliente, DNI, modelo o WSP..." 
+                    placeholder="Buscar cliente, DNI, vehículo o WSP..." 
                     class="w-full bg-slate-900/90 border border-slate-800 rounded-xl py-2 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-brand-primary transition-all placeholder:text-slate-500"
                 >
                 <i class="fas fa-search absolute left-3 top-2.5 text-slate-500 text-xs"></i>
             </div>
 
-            <!-- Selector de Criterio de Ordenamiento -->
-            <div class="flex items-center gap-2 w-full lg:w-auto justify-end">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Ordenar por:</label>
-                <select 
-                    id="sort-select" 
-                    onchange="applyFilters()" 
-                    class="bg-slate-900 border border-slate-800 rounded-xl py-1.5 px-3 text-xs text-slate-200 focus:outline-none focus:border-brand-primary cursor-pointer font-medium"
+            <!-- DROPDOWN EMERGENTE CON LOGOTIPO/ICONO DE ORDENAMIENTO -->
+            <div class="relative w-full md:w-auto flex justify-end">
+                <button 
+                    id="sort-dropdown-btn"
+                    onclick="toggleSortDropdown()"
+                    class="w-full md:w-auto px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-brand-primary/50 text-slate-200 text-xs font-bold flex items-center justify-between md:justify-start gap-2.5 transition-all shadow-md cursor-pointer"
                 >
-                    <option value="last_visit_desc">Última visita (Más recientes primero)</option>
-                    <option value="last_visit_asc">Ausencia (Más tiempo sin venir)</option>
-                    <option value="lavados_desc">Mayor frecuencia (Más lavados)</option>
-                    <option value="nombre_asc">Nombre (A - Z)</option>
-                </select>
+                    <span class="flex items-center gap-2">
+                        <i id="sort-current-icon" class="fas fa-[#1d8ef1] fa-arrow-down-wide-short text-brand-primary"></i>
+                        <span id="sort-current-label" class="text-slate-300">Última visita (Más recientes)</span>
+                    </span>
+                    <i class="fas fa-chevron-down text-[10px] text-slate-500 transition-transform" id="sort-chevron"></i>
+                </button>
+
+                <!-- Menú Desplegable Emergente -->
+                <div 
+                    id="sort-dropdown-menu" 
+                    class="hidden absolute right-0 top-11 w-64 glass-card border border-slate-700/80 rounded-2xl p-1.5 shadow-2xl z-40 space-y-1"
+                >
+                    <div class="px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-800/80">
+                        Ordenar directorio por
+                    </div>
+
+                    <button 
+                        onclick="selectSortOption('last_visit_desc', 'fas fa-arrow-down-wide-short', 'Última visita (Más recientes)')"
+                        class="w-full text-left px-3 py-2 rounded-xl hover:bg-brand-primary/10 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2.5 transition-all"
+                    >
+                        <i class="fas fa-arrow-down-wide-short text-brand-primary w-4"></i>
+                        <span>Última visita (Más recientes)</span>
+                    </button>
+
+                    <button 
+                        onclick="selectSortOption('last_visit_asc', 'fas fa-clock-rotate-left', 'Ausencia (Más tiempo sin venir)')"
+                        class="w-full text-left px-3 py-2 rounded-xl hover:bg-brand-primary/10 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2.5 transition-all"
+                    >
+                        <i class="fas fa-clock-rotate-left text-amber-400 w-4"></i>
+                        <span>Ausencia (Más tiempo sin venir)</span>
+                    </button>
+
+                    <button 
+                        onclick="selectSortOption('lavados_desc', 'fas fa-car-wash', 'Frecuencia (Más lavados)')"
+                        class="w-full text-left px-3 py-2 rounded-xl hover:bg-brand-primary/10 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2.5 transition-all"
+                    >
+                        <i class="fas fa-car-wash text-emerald-400 w-4"></i>
+                        <span>Frecuencia (Más lavados)</span>
+                    </button>
+
+                    <button 
+                        onclick="selectSortOption('nombre_asc', 'fas fa-arrow-down-a-z', 'Nombre (A - Z)')"
+                        class="w-full text-left px-3 py-2 rounded-xl hover:bg-brand-primary/10 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2.5 transition-all"
+                    >
+                        <i class="fas fa-arrow-down-a-z text-cyan-400 w-4"></i>
+                        <span>Nombre (A - Z)</span>
+                    </button>
+                </div>
             </div>
 
         </div>
 
-        <div class="border-t border-slate-800/80 pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <div class="border-t border-slate-800/80 pt-3">
             
-            <!-- Selector de Filtro de Inactividad con Contadores Integrados -->
+            <!-- Selector de Inactividad -->
             <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 sm:pb-0">
                 <button 
                     onclick="setInactivityFilter('all', this)" 
-                    class="filter-btn active-filter px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-brand-primary text-white border border-brand-primary transition-all whitespace-nowrap flex items-center gap-1.5"
+                    class="filter-btn active-filter px-3.5 py-1.5 rounded-xl text-[11px] font-extrabold bg-brand-primary text-white border border-brand-primary transition-all whitespace-nowrap flex items-center gap-1.5 shadow-sm"
                 >
                     <span>Todos</span>
                     <span id="badge-count-all" class="px-1.5 py-0.2 rounded-full bg-slate-950/40 text-[9px]">0</span>
@@ -149,7 +189,7 @@
 
                 <button 
                     onclick="setInactivityFilter('1w', this)" 
-                    class="filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
+                    class="filter-btn px-3.5 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
                 >
                     <i class="fas fa-clock text-[10px] text-amber-400"></i>
                     <span>+1 Sem. sin venir</span>
@@ -158,7 +198,7 @@
 
                 <button 
                     onclick="setInactivityFilter('2w', this)" 
-                    class="filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
+                    class="filter-btn px-3.5 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
                 >
                     <i class="fas fa-triangle-exclamation text-[10px] text-orange-400"></i>
                     <span>+2 Sem. sin venir</span>
@@ -167,7 +207,7 @@
 
                 <button 
                     onclick="setInactivityFilter('1m', this)" 
-                    class="filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
+                    class="filter-btn px-3.5 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5"
                 >
                     <i class="fas fa-circle-exclamation text-[10px] text-rose-400"></i>
                     <span>+1 Mes sin venir</span>
@@ -179,13 +219,13 @@
 
     </div>
 
-    <!-- CONTENEDOR DE CARDS DE CLIENTES -->
-    <div id="clients-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Renderizado dinámico desde JavaScript -->
+    <!-- TARJETAS DE CLIENTES -->
+    <div id="clients-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+        <!-- Generado dinámicamente -->
     </div>
 
 
-    <!-- MODAL 1: REGISTRAR NUEVO CLIENTE -->
+    <!-- MODAL: REGISTRAR NUEVO CLIENTE -->
     <div id="modal-nuevo-cliente" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
         <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl">
             <button onclick="closeModal('modal-nuevo-cliente')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
@@ -226,7 +266,7 @@
     </div>
 
 
-    <!-- MODAL 2: TIMELINE Y FICHA COMPLETA -->
+    <!-- MODAL: TIMELINE Y FICHA COMPLETA -->
     <div id="modal-timeline" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
         <div class="glass-card w-full max-w-lg rounded-3xl p-5 relative border border-slate-700 shadow-2xl flex flex-col max-h-[90vh]">
             <button onclick="closeModal('modal-timeline')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
@@ -239,7 +279,6 @@
                 <p id="timeline-client-info" class="text-xs text-slate-400 mt-0.5">DNI: - | Vehículo: -</p>
             </div>
 
-            <!-- TIMELINE LIST CONTAINER -->
             <div class="flex-1 overflow-y-auto pr-2 space-y-4" id="timeline-list">
                 <!-- Se genera dinámicamente -->
             </div>
@@ -253,7 +292,7 @@
     </div>
 
 
-    <!-- MODAL 3: ENVIAR MENSAJE DE FIDELIZACIÓN POR WHATSAPP -->
+    <!-- MODAL: ENVIAR MENSAJE DE FIDELIZACIÓN POR WHATSAPP -->
     <div id="modal-wsp-promo" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
         <div class="glass-card w-full max-w-md rounded-3xl p-5 relative border border-slate-700 shadow-2xl">
             <button onclick="closeModal('modal-wsp-promo')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">
@@ -288,23 +327,32 @@
     </div>
 
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT -->
     <script>
-        // 1. VERIFICACIÓN DE SEGURIDAD (PÁGINA PRIVADA)
+        let currentSortCriteria = 'last_visit_desc';
+        let currentInactivityFilter = 'all';
+        let currentTargetClient = null;
+
+        // VERIFICACIÓN DE SESIÓN PRIVADA
         document.addEventListener('DOMContentLoaded', () => {
             const sessionData = localStorage.getItem('waitcars_session');
             if (!sessionData) {
-                // Redireccionar si no existe sesión válida
                 window.location.href = 'auth/login.html';
                 return;
             }
 
-            // Si hay sesión activa, cargar el directorio
             loadClientModule();
-        });
 
-        let currentInactivityFilter = 'all';
-        let currentTargetClient = null;
+            // Cerrar el dropdown emergente al hacer click fuera
+            document.addEventListener('click', (e) => {
+                const btn = document.getElementById('sort-dropdown-btn');
+                const menu = document.getElementById('sort-dropdown-menu');
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                    document.getElementById('sort-chevron').classList.remove('rotate-180');
+                }
+            });
+        });
 
         function getClientsData() {
             return JSON.parse(localStorage.getItem('wc_clientes') || '[]');
@@ -319,19 +367,38 @@
             applyFilters();
         }
 
+        // CONTROL DEL MENÚ DROPDOWN DE ORDENAMIENTO
+        function toggleSortDropdown() {
+            const menu = document.getElementById('sort-dropdown-menu');
+            const chevron = document.getElementById('sort-chevron');
+            menu.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+
+        function selectSortOption(criteria, iconClass, label) {
+            currentSortCriteria = criteria;
+            
+            const iconEl = document.getElementById('sort-current-icon');
+            iconEl.className = `${iconClass} w-4`;
+            
+            document.getElementById('sort-current-label').textContent = label;
+            
+            toggleSortDropdown();
+            applyFilters();
+        }
+
         function setInactivityFilter(filterType, btn) {
             currentInactivityFilter = filterType;
             
             document.querySelectorAll('.filter-btn').forEach(b => {
-                b.className = "filter-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5";
+                b.className = "filter-btn px-3.5 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5";
             });
 
-            btn.className = "filter-btn active-filter px-3 py-1.5 rounded-xl text-[11px] font-extrabold bg-brand-primary text-white border border-brand-primary transition-all whitespace-nowrap flex items-center gap-1.5";
+            btn.className = "filter-btn active-filter px-3.5 py-1.5 rounded-xl text-[11px] font-extrabold bg-brand-primary text-white border border-brand-primary transition-all whitespace-nowrap flex items-center gap-1.5 shadow-sm";
             
             applyFilters();
         }
 
-        // CÁLCULO DINÁMICO DE CONTADORES DE INACTIVIDAD EN LOS BADGES
         function updateBadgesCount() {
             const clientes = getClientsData();
             const turnos = getTurnosData();
@@ -367,17 +434,14 @@
             document.getElementById('badge-count-1m').textContent = count1m;
         }
 
-        // APLICAR BÚSQUEDA, FILTROS Y ORDENAMIENTO
         function applyFilters() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
-            const sortCriteria = document.getElementById('sort-select').value;
             
             const clientes = getClientsData();
             const turnos = getTurnosData();
             const now = new Date();
 
             let result = clientes.filter(c => {
-                // Filtro de Texto
                 const matchesText = (c.nombre || '').toLowerCase().includes(query) ||
                                     (c.dni || '').toLowerCase().includes(query) ||
                                     (c.vehiculo || '').toLowerCase().includes(query) ||
@@ -385,7 +449,6 @@
 
                 if (!matchesText) return false;
 
-                // Cargar fecha del último lavado
                 const clientTurnos = turnos.filter(t => t.dni === c.dni);
                 let lastTurnoDate = null;
 
@@ -399,7 +462,6 @@
                 c._lastTurnoDate = lastTurnoDate;
                 c._daysAgo = lastTurnoDate ? Math.floor((now - lastTurnoDate) / (1000 * 60 * 60 * 24)) : 999;
 
-                // Filtro de Inactividad
                 if (currentInactivityFilter === 'all') return true;
                 if (!lastTurnoDate) return false;
 
@@ -410,19 +472,17 @@
                 return true;
             });
 
-            // Ordenamiento
             result.sort((a, b) => {
-                if (sortCriteria === 'last_visit_desc') return a._daysAgo - b._daysAgo;
-                if (sortCriteria === 'last_visit_asc') return b._daysAgo - a._daysAgo;
-                if (sortCriteria === 'lavados_desc') return (b.lavados || 0) - (a.lavados || 0);
-                if (sortCriteria === 'nombre_asc') return (a.nombre || '').localeCompare(b.nombre || '');
+                if (currentSortCriteria === 'last_visit_desc') return a._daysAgo - b._daysAgo;
+                if (currentSortCriteria === 'last_visit_asc') return b._daysAgo - a._daysAgo;
+                if (currentSortCriteria === 'lavados_desc') return (b.lavados || 0) - (a.lavados || 0);
+                if (currentSortCriteria === 'nombre_asc') return (a.nombre || '').localeCompare(b.nombre || '');
                 return 0;
             });
 
             renderClientsList(result);
         }
 
-        // RENDERIZADO DE LAS TARJETAS DE CLIENTES
         function renderClientsList(list) {
             const container = document.getElementById('clients-container');
             container.innerHTML = '';
@@ -431,7 +491,7 @@
                 container.innerHTML = `
                     <div class="col-span-full text-center py-12 glass-card rounded-2xl border border-slate-800">
                         <i class="fas fa-users-slash text-3xl text-slate-600 mb-2"></i>
-                        <p class="text-xs text-slate-400 font-medium">No se encontraron clientes que coincidan con el filtro seleccionado.</p>
+                        <p class="text-xs text-slate-400 font-medium">No se encontraron clientes que coincidan con la búsqueda.</p>
                     </div>
                 `;
                 return;
@@ -442,9 +502,7 @@
             list.forEach(c => {
                 const clientTurnos = turnos.filter(t => t.dni === c.dni);
                 const totalLavados = c.lavados || clientTurnos.length || 0;
-                const totalMonto = clientTurnos.reduce((acc, curr) => acc + (curr.monto || 0), 0);
 
-                // Estado según días sin venir
                 let statusBadge = '';
                 if (c._daysAgo < 14) {
                     statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">Activo</span>`;
@@ -454,7 +512,6 @@
                     statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-rose-500/15 border border-rose-500/30 text-rose-400">Inactivo (+1 mes)</span>`;
                 }
 
-                // Iniciales para el Avatar
                 const initial = (c.nombre || 'C').charAt(0).toUpperCase();
 
                 const card = document.createElement('div');
@@ -515,7 +572,6 @@
             });
         }
 
-        // ABRIR FICHA E HISTORIAL COMPLETO DE SERVICIOS
         function openTimeline(dni) {
             const clientes = getClientsData();
             const turnos = getTurnosData();
@@ -555,7 +611,7 @@
                                 <span class="text-xs font-black text-emerald-400">$${(t.monto || 0).toFixed(2)}</span>
                             </div>
                             <p class="text-xs font-bold text-slate-200">${t.vehiculo || cliente.vehiculo}</p>
-                            <p class="text-[10px] text-slate-400 mt-0.5">Servicio agendado y registrado con éxito.</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Servicio registrado.</p>
                         </div>
                     `;
 
@@ -566,7 +622,6 @@
             openModal('modal-timeline');
         }
 
-        // MODAL DE MENSAJES DE FIDELIZACIÓN POR WHATSAPP
         function openWspModal(dni) {
             const clientes = getClientsData();
             currentTargetClient = clientes.find(c => c.dni === dni);
@@ -605,7 +660,6 @@
             closeModal('modal-wsp-promo');
         }
 
-        // CREAR NUEVO CLIENTE
         function createNewClient(event) {
             event.preventDefault();
 
@@ -617,7 +671,7 @@
             let clientes = getClientsData();
 
             if (clientes.some(c => c.dni === dni)) {
-                alert('Atención: Ya existe un cliente registrado con ese número de DNI.');
+                alert('Atención: Ya existe un cliente registrado con ese DNI.');
                 return;
             }
 
