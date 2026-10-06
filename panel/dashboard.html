@@ -2,7 +2,7 @@
 <html lang="es" class="h-full bg-slate-950 select-none">
 <head>
     <meta charset="UTF-8">
-    <!-- SE EVITA CUALQUIER TIPO DE ZOOM EN MÓVILES -->
+    <!-- EVITAR ZOOM EN MÓVILES -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Waitcars - Panel Principal</title>
     <!-- Tailwind CSS -->
@@ -33,7 +33,7 @@
     </script>
 
     <style>
-        /* PREVENIR ZOOM Y SCROLL INDECEADO EN DISPOSITIVOS MÓVILES */
+        /* PREVENIR ZOOM Y SCROLL EN MÓVILES */
         html, body {
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
@@ -42,7 +42,7 @@
             background-color: #020712;
         }
 
-        /* Evita que Safari/Chrome hagan zoom al tocar inputs */
+        /* Bloqueo de zoom en campos de texto */
         input, select, textarea, button {
             font-size: 16px !important;
             touch-action: manipulation;
@@ -87,6 +87,29 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(29, 142, 241, 0.15);
         }
 
+        /* BOTONES DE ACCIÓN PRINCIPALES */
+        .action-btn-primary {
+            background: linear-gradient(135deg, rgba(29, 142, 241, 0.18) 0%, rgba(11, 59, 130, 0.35) 100%);
+            border: 1px solid rgba(29, 142, 241, 0.4);
+            box-shadow: 0 8px 20px rgba(29, 142, 241, 0.15);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .action-btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .action-btn-rose {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.18) 0%, rgba(136, 19, 55, 0.35) 100%);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.15);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .action-btn-rose:active {
+            transform: scale(0.98);
+        }
+
         .notification-dropdown {
             transform-origin: top right;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -104,15 +127,21 @@
     <div class="glow-orb w-[400px] h-[400px] bg-brand-primary -top-20 -left-20 z-0"></div>
     <div class="glow-orb w-[450px] h-[450px] bg-brand-dark bottom-0 right-0 z-0"></div>
 
-    <!-- CABECERA SUPERIOR FIJA QUE NO SE MUEVE -->
+    <!-- CABECERA SUPERIOR -->
     <header class="sticky top-0 z-30 glass-header px-4 sm:px-8 py-3 shadow-lg">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             
-            <!-- Saludo al usuario con el nombre ajustado -->
+            <!-- Saludo y Logo con Inicial 'W' / Cohete -->
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-brand-primary/20 border border-brand-primary/30 flex items-center justify-center text-brand-primary font-black text-sm shadow-inner shrink-0">
-                    <i class="fas fa-car-wash"></i>
+                <!-- Circulito de Logo Profesional -->
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-dark via-brand-primary to-brand-accent p-[1px] shadow-lg shadow-brand-primary/20 shrink-0 flex items-center justify-center">
+                    <div class="w-full h-full bg-[#07162c] rounded-[15px] flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-brand-primary/10 backdrop-blur-sm"></div>
+                        <!-- Inicial W profesional (puedes cambiar 'W' por <i class="fas fa-rocket text-brand-primary text-sm"></i>) -->
+                        <span class="relative font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-brand-primary text-base tracking-tighter">W</span>
+                    </div>
                 </div>
+
                 <div>
                     <span class="text-[10px] font-black uppercase tracking-widest text-brand-primary block leading-none">Waitcars System</span>
                     <h1 class="text-sm sm:text-base font-extrabold text-white mt-0.5 leading-tight flex items-center gap-1.5">
@@ -178,7 +207,7 @@
         </div>
     </header>
 
-    <!-- CONTENEDOR PRINCIPAL QUE ADAPTA SU TAMAÑO A TODA LA PANTALLA -->
+    <!-- CONTENEDOR PRINCIPAL -->
     <div class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3">
 
         <main id="main-content">
@@ -186,7 +215,7 @@
             <!-- VISTA INICIO -->
             <div id="view-inicio" class="space-y-4">
                 
-                <!-- CARDS COMPACTAS -->
+                <!-- CARDS DE ESTADÍSTICAS COMPACTAS -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     
                     <!-- Generado Hoy -->
@@ -233,50 +262,50 @@
 
                 </div>
 
-                <!-- ACCIONES RÁPIDAS -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- BOTONES DE ACCIÓN REDISEÑADOS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     
-                    <!-- Agendar un Turno -->
+                    <!-- Botón 1: Agendar Turno -->
                     <button 
                         onclick="openModal('modal-turno')" 
-                        class="p-4 rounded-2xl glass-card border border-brand-primary/30 hover:border-brand-primary transition-all duration-200 text-left group relative overflow-hidden flex items-start gap-3.5"
+                        class="action-btn-primary p-4 rounded-2xl text-left group relative overflow-hidden flex items-center justify-between cursor-pointer"
                     >
-                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-primary/20 to-brand-dark/40 border border-brand-primary/40 text-brand-primary flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform shadow-md">
-                            <i class="fas fa-calendar-plus"></i>
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[9px] font-extrabold uppercase tracking-widest text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-2 py-0.5 rounded">
-                                    Lavados & Servicios
-                                </span>
-                                <i class="fas fa-chevron-right text-xs text-slate-500 group-hover:text-brand-primary transition-colors"></i>
+                        <div class="flex items-center gap-3.5 z-10">
+                            <div class="w-12 h-12 rounded-xl bg-brand-primary text-slate-950 flex items-center justify-center text-lg font-black shrink-0 shadow-lg shadow-brand-primary/30 group-hover:scale-105 transition-transform">
+                                <i class="fas fa-calendar-plus"></i>
                             </div>
-                            <h3 class="text-sm font-extrabold text-white mt-1 group-hover:text-brand-primary transition-colors">Agendar un Turno</h3>
-                            <p class="text-[11px] text-slate-400 mt-0.5 leading-snug">
-                                Reserva horario, busca cliente por DNI, asigna auto y tipo de servicio.
-                            </p>
+                            <div>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-primary bg-brand-primary/15 border border-brand-primary/30 px-2 py-0.5 rounded-full inline-block mb-1">
+                                    Nuevo servicio
+                                </span>
+                                <h3 class="text-base font-black text-white leading-tight">Agendar un Turno</h3>
+                                <p class="text-[11px] text-slate-300/80 mt-0.5">Reserva horarios y asigna vehículos.</p>
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-slate-950 transition-all shrink-0 ml-2">
+                            <i class="fas fa-arrow-right text-xs"></i>
                         </div>
                     </button>
 
-                    <!-- Registrar un Gasto -->
+                    <!-- Botón 2: Registrar Gasto -->
                     <button 
                         onclick="openModal('modal-gasto')" 
-                        class="p-4 rounded-2xl glass-card border border-rose-500/30 hover:border-rose-500 transition-all duration-200 text-left group relative overflow-hidden flex items-start gap-3.5"
+                        class="action-btn-rose p-4 rounded-2xl text-left group relative overflow-hidden flex items-center justify-between cursor-pointer"
                     >
-                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-rose-500/20 to-rose-950/40 border border-rose-500/40 text-rose-400 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform shadow-md">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[9px] font-extrabold uppercase tracking-widest text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded">
-                                    Caja Operativa
-                                </span>
-                                <i class="fas fa-chevron-right text-xs text-slate-500 group-hover:text-rose-400 transition-colors"></i>
+                        <div class="flex items-center gap-3.5 z-10">
+                            <div class="w-12 h-12 rounded-xl bg-rose-500 text-slate-950 flex items-center justify-center text-lg font-black shrink-0 shadow-lg shadow-rose-500/30 group-hover:scale-105 transition-transform">
+                                <i class="fas fa-wallet"></i>
                             </div>
-                            <h3 class="text-sm font-extrabold text-white mt-1 group-hover:text-rose-400 transition-colors">Registrar un Gasto</h3>
-                            <p class="text-[11px] text-slate-400 mt-0.5 leading-snug">
-                                Asigna salidas de dinero, productos de limpieza o insumos de tu negocio.
-                            </p>
+                            <div>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-rose-400 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded-full inline-block mb-1">
+                                    Caja & Egresos
+                                </span>
+                                <h3 class="text-base font-black text-white leading-tight">Registrar un Gasto</h3>
+                                <p class="text-[11px] text-slate-300/80 mt-0.5">Anota insumos o salidas de dinero.</p>
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-slate-950 transition-all shrink-0 ml-2">
+                            <i class="fas fa-arrow-right text-xs"></i>
                         </div>
                     </button>
 
@@ -284,7 +313,7 @@
 
             </div>
 
-            <!-- VISTAS SECUNDARIAS A PANTALLA COMPLETA COMPLETA (Agenda, Clientes, Historial, Admin) -->
+            <!-- VISTAS SECUNDARIAS A PANTALLA COMPLETA -->
             <div id="view-iframe-container" class="hidden w-full h-[calc(100vh-140px)] rounded-2xl overflow-hidden glass-card border border-slate-800">
                 <iframe id="content-frame" class="w-full h-full border-0"></iframe>
             </div>
@@ -300,7 +329,7 @@
             <button 
                 onclick="navTo('inicio')" 
                 id="nav-inicio" 
-                class="nav-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-brand-primary transition-all duration-200"
+                class="nav-btn flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-brand-primary transition-all duration-200 font-bold"
             >
                 <i class="fas fa-house-circle-check text-sm"></i>
                 <span class="text-[9px] font-extrabold tracking-wider">Inicio</span>
@@ -466,7 +495,7 @@
             if (badge) badge.classList.add('hidden');
         }
 
-        // CAMBIO DE VISTAS A PANTALLA COMPLETA
+        // NAVEGACIÓN ENTRE SECCIONES
         function navTo(section) {
             const viewInicio = document.getElementById('view-inicio');
             const viewIframeContainer = document.getElementById('view-iframe-container');
